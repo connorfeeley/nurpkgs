@@ -14,5 +14,6 @@
   # modules = import ./modules; # NixOS modules
   # overlays = import ./overlays; # nixpkgs overlays
 
+  apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete/default.nix { };
   maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch/default.nix { };
 }
