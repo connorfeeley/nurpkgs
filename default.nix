@@ -16,4 +16,6 @@
 
   apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete/default.nix { };
   maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch/default.nix { };
+
+  qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu/default.nix { };
 }
