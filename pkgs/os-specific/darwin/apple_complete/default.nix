@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, installShellFiles }:
+{ lib, stdenv, fetchFromGitHub, installShellFiles, gitUpdater }:
 let
   completions = [
     "asr"
@@ -34,6 +34,8 @@ stdenv.mkDerivation rec {
   installPhase = ''
     installShellCompletion --bash ${lib.concatStringsSep " " completions}
   '';
+
+  passthru.updateScript = gitUpdater { };
 
   meta = with lib; {
     description = "bash completion for some of Apple's MacOS tools and common macadmin tools. Can be used with `zsh`";
