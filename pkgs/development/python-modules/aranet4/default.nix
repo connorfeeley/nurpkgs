@@ -1,7 +1,4 @@
-{ lib
-, python3
-, fetchFromGitHub
-}:
+{ lib, python3, fetchFromGitHub, gitUpdater }:
 
 python3.pkgs.buildPythonApplication rec {
   pname = "aranet4";
@@ -21,6 +18,8 @@ python3.pkgs.buildPythonApplication rec {
   ];
 
   pythonImportsCheck = [ "aranet4" ];
+
+  passthru.updateScript = gitUpdater { };
 
   meta = with lib; {
     description = "Aranet4 Python client";

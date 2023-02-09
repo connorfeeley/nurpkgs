@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub }:
+{ lib, stdenv, fetchFromGitHub, gitUpdater }:
 
 stdenv.mkDerivation rec {
   pname = "maclaunch";
@@ -14,6 +14,8 @@ stdenv.mkDerivation rec {
   installPhase = ''
     install -Dm 755 maclaunch.sh $out/bin/maclaunch
   '';
+
+  passthru.updateScript = gitUpdater { };
 
   meta = with lib; {
     description = "Manage your macOS startup items.";
