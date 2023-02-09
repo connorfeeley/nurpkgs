@@ -1,18 +1,30 @@
 { config, lib, pkgs, ... }:
 let
-  mkWallpaper = name: { class, url, sha256 }:
-    pkgs.stdenv.mkDerivation rec {
-      pname = "toronto-${name}-backgrounds";
+  inherit (lib.strings) sanitizeDerivationName;
+
+  # Not free in the "free software" sense, but very permissive:
+  # - No attribution required
+  # - May modify and redistribute; except "on other stock photo or wallpaper platforms")
+  # https://www.pexels.com/license/
+  # https://www.pexels.com/terms-of-service/
+  license = lib.licenses.free;
+
+  mkWallpaper = name': { class, url, sha256 }:
+    let name = sanitizeDerivationName name';
+    in pkgs.stdenv.mkDerivation rec {
+      pname = sanitizeDerivationName "toronto-${name}-backgrounds";
       version = "0.0.1";
 
       unpackPhase = "cp $src .";
       installPhase = ''
         mkdir -p $out/share/backgrounds
-        cp ${lib.escapeShellArg src} $out/share/backgrounds/${lib.escapeShellArg name}.jpg
+        cp ${src} $out/share/backgrounds/${sanitizeDerivationName name}.jpg
       '';
 
+      passthru = { inherit name class; };
+
       src = pkgs.fetchurl {
-        name = lib.escapeShellArg "${name}.jpg";
+        name = sanitizeDerivationName "${name}.jpg";
         inherit url sha256;
       };
     };
@@ -83,9 +95,13 @@ pkgs.stdenv.mkDerivation rec {
     cp -r $src/share/backgrounds $out/share/backgrounds
   '';
 
+  passthru = lib.mapAttrs' (k: v: lib.nameValuePair (sanitizeDerivationName k) v.passthru) torontoWallpapers;
+
   meta = with lib; {
     description = "Toronto-themed wallpapers";
-    license = licenses.unfree;
+    # https://www.pexels.com/terms-of-service/
+    # https://www.pexels.com/license/
+    inherit license;
     maintainers = [ maintainers.cfeeley ];
     platforms = platforms.all;
   };
