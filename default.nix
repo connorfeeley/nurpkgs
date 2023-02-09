@@ -17,6 +17,8 @@
   apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete/default.nix { };
   maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch/default.nix { };
 
+  aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4/default.nix { };
+
   toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds/default.nix { };
 
   qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu/default.nix { };
