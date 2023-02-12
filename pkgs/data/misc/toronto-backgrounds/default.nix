@@ -92,7 +92,7 @@ pkgs.stdenv.mkDerivation rec {
   dontBuild = true;
   installPhase = ''
     mkdir -p $out/share/backgrounds
-    cp -r $src/share/backgrounds $out/share/backgrounds
+    cp -r $src/share/backgrounds/* $out/share/backgrounds
   '';
 
   passthru = lib.mapAttrs' (k: v: lib.nameValuePair (sanitizeDerivationName k) v.passthru) torontoWallpapers;
