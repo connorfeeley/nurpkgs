@@ -1,7 +1,8 @@
 {
   description = "My personal NUR repository";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  outputs = { self, nixpkgs }:
+  inputs.flake-utils.url = "github:numtide/flake-utils";
+  outputs = { self, nixpkgs, flake-utils }:
     let
       systems = [
         "x86_64-linux"
@@ -15,8 +16,8 @@
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
     in
     {
-      packages = forAllSystems (system: import ./default.nix {
-        pkgs = import nixpkgs { inherit system; };
-      });
+      packages = forAllSystems (system:
+        let nurpkgs = import ./default.nix { pkgs = import nixpkgs { inherit system; }; };
+        in flake-utils.lib.filterPackages system nurpkgs);
     };
 }
