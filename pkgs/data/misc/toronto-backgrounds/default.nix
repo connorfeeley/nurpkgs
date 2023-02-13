@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   inherit (lib.strings) sanitizeDerivationName;
 
@@ -27,6 +27,7 @@ let
         name = sanitizeDerivationName "${name}.jpg";
         inherit url sha256;
       };
+      meta = { inherit license; };
     };
 
   torontoWallpapers = lib.mapAttrs (k: v: mkWallpaper k v) {
@@ -78,9 +79,14 @@ let
         "https://images.pexels.com/photos/3159900/pexels-photo-3159900.jpeg?cs=srgb&dl=pexels-andre-furtado-3159900.jpg&fm=jpg&w=3648&h=5472";
       sha256 = "sha256-j0gknTIl4tdaWWm2byBG71BkPog9CLZPndKJUXu7FRs=";
     };
+    "Streetcar 506 College-Yonge" = {
+      class = "dark";
+      url = "https://unsplash.com/photos/OvKHfwmRq-o/download?ixid=MnwxMjA3fDB8MXxhbGx8MTl8fHx8fHwyfHwxNjc2MjU4Mjgx&force=true";
+      sha256 = "sha256-rlO68dZ0CS6uZMTvdNKOy3koKopUqJy1g7FNgKlSMrw=";
+    };
   };
 in
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation {
   name = "toronto-backgrounds";
 
   src = pkgs.symlinkJoin {
@@ -98,7 +104,7 @@ pkgs.stdenv.mkDerivation rec {
   passthru = lib.mapAttrs' (k: v: lib.nameValuePair (sanitizeDerivationName k) v.passthru) torontoWallpapers;
 
   meta = with lib; {
-    description = "Toronto-themed wallpapers";
+    description = "Personal collection of wallpaper images of Toronto, Canada";
     # https://www.pexels.com/terms-of-service/
     # https://www.pexels.com/license/
     inherit license;
