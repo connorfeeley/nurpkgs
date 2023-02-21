@@ -14,12 +14,13 @@
   # modules = import ./modules; # NixOS modules
   # overlays = import ./overlays; # nixpkgs overlays
 
-  apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete/default.nix { };
-  maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch/default.nix { };
+  apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete { };
+  maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
 
-  aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4/default.nix { };
+  aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
 
-  toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds/default.nix { };
+  toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
 
-  qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu/default.nix { };
+  qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
+  xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
 }
