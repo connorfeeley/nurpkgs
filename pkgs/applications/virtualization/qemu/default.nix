@@ -8,8 +8,6 @@ let
     sha256 = "sha256-uLpmhexfanj2v8CSiAro6vLy/yY8UBTWuRd7ddlhaeI=";
   };
 in
-{
-  qemu-xilinx = qemu.overrideAttrs (old: {
-    inherit version src;
-  });
-}
+qemu.overrideAttrs (old: {
+  inherit version src;
+})
