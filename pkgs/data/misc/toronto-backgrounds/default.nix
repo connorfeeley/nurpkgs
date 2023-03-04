@@ -84,6 +84,12 @@ let
       url = "https://unsplash.com/photos/OvKHfwmRq-o/download?ixid=MnwxMjA3fDB8MXxhbGx8MTl8fHx8fHwyfHwxNjc2MjU4Mjgx&force=true";
       sha256 = "sha256-rlO68dZ0CS6uZMTvdNKOy3koKopUqJy1g7FNgKlSMrw=";
     };
+    "Glen Road Bridge" = {
+      class = "light";
+      # https://twitter.com/SwanBoatSteve/status/1632021109737508869/photo/1
+      url = "https://pbs.twimg.com/media/FqYaefhWIAUiwAV?format=jpg";
+      sha256 = "sha256-sbRIcWZLcb5Vo5q3zcIrrmr20/+1yzQXPsFdNL8Iqf8=";
+    };
   };
 in
 pkgs.stdenv.mkDerivation {
