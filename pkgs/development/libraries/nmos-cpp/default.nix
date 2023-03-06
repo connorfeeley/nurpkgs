@@ -12,6 +12,7 @@
 , zlib
 , avahi-compat
 , dbus
+, gtest
 }:
 
 stdenv.mkDerivation rec {
@@ -26,13 +27,14 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ boost cpprestsdk nlohmann_json avahi-compat dbus ];
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [ cmake gtest ]; # gtest only needed for tests
 
-  cmakeFlags = [ "-DNMOS_CPP_USE_CONAN=OFF" ];
+  cmakeFlags = [ "-DNMOS_CPP_USE_CONAN=OFF" "-DNMOS_CPP_BUILD_TESTS=${if doCheck then "ON" else "OFF"}" ];
 
+  # Top-level CMakeLists.txt is is Development subdirectory
   preConfigure = "cd Development";
 
-  # Fails due to:
+  # FIXME: fails due to:
   #     The program 'nmos-cpp-test' uses the Apple Bonjour compatibility layer of Avahi.
   #     Please fix your application to use the native API of Avahi!
   doCheck = false;
