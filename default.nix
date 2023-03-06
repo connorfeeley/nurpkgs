@@ -21,6 +21,8 @@
 
   toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
 
+  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { };
+
   qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
   xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
 }
