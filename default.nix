@@ -7,7 +7,9 @@
 #     nix-build -A mypackage
 
 { pkgs ? import <nixpkgs> { } }:
-
+let
+  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { };
+in
 {
   # The `lib`, `modules`, and `overlay` names are special
   # lib = import ./lib { inherit pkgs; }; # functions
@@ -16,9 +18,9 @@
 
   apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete { };
   aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
-  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { };
+  inherit cpprestsdk;
   maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
-  nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { };
+  nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
   qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
   toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
   xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
