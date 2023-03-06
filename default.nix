@@ -8,7 +8,7 @@
 
 { pkgs ? import <nixpkgs> { } }:
 let
-  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { };
+  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
 in
 {
   # The `lib`, `modules`, and `overlay` names are special

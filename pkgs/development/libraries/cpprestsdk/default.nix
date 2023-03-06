@@ -8,6 +8,7 @@
 , boost
 , zlib
 , fetchpatch
+, Security
 }:
 
 stdenv.mkDerivation rec {
@@ -27,9 +28,15 @@ stdenv.mkDerivation rec {
       url = "https://github.com/microsoft/cpprestsdk/pull/1742/commits/3dc3f2b3b2d0a42de12aa1fcfaf261a4d2c242b0.patch";
       sha256 = "sha256-aF+poF+Q+c2NkXLUZjcQ6m0NgPLZGDniSJpROMlewXk=";
     })
-  ];
+  ] ++ (lib.optionals stdenv.isDarwin [
+    # Find openssl on macOS
+    (fetchpatch {
+      url = "https://github.com/microsoft/cpprestsdk/pull/1439/commits/ccd74e1b62fcffa3c7ac37fc90152433b20baf2f.patch";
+      sha256 = "sha256-W2OmlXNI5UJyrPCF3vftVjKrk4K5msBh+I3f6YG6pnI=";
+    })
+  ]);
 
-  buildInputs = [ boost ];
+  buildInputs = [ boost ] ++ (lib.optionals stdenv.isDarwin [ Security ]);
   propagatedBuildInputs = [ zlib websocketpp openssl ];
   nativeBuildInputs = [ cmake ninja ];
 
