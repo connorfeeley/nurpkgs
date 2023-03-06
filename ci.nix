@@ -9,7 +9,17 @@
 # then your CI will be able to build and cache only those packages for
 # which this is possible.
 
-{ pkgs ? import <nixpkgs> { } }:
+let
+  # Pin nixpkgs for Hercules CI, which uses an empty NIX_PATH
+  pinnedPkgs = import
+    (builtins.fetchTarball {
+      name = "nixpkgs";
+      url = "https://github.com/nixos/nixpkgs/archive/49596eb4e50b18337aad3b73317371bcd4e3b047.tar.gz";
+      sha256 = "1yifdz6q1p5jzsf89d3gk0nha48969kgw32air4ibyga8d7133px";
+    })
+    { };
+in
+{ pkgs ? pinnedPkgs }:
 
 with builtins;
 let
