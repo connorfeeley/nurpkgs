@@ -15,15 +15,11 @@
   # overlays = import ./overlays; # nixpkgs overlays
 
   apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete { };
-  maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
-
   aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
-
-  toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
-
   cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { };
+  maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
   nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { };
-
   qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
+  toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
   xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
 }
