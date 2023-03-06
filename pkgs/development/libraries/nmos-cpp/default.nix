@@ -24,7 +24,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ boost cpprestsdk nlohmann_json avahi-compat dbus ];
   nativeBuildInputs = [ cmake ];
 
-  cmakeFlags = [ "-DBUILD_EXAMPLES=OFF" "-DNMOS_CPP_USE_CONAN=OFF" ];
+  cmakeFlags = [ "-DNMOS_CPP_USE_CONAN=OFF" ];
 
   preConfigure = "cd Development";
 
