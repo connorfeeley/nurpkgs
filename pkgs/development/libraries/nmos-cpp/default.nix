@@ -38,6 +38,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "An NMOS (Networked Media Open Specifications) Registry and Node in C++ (IS-04, IS-05)";
     homepage = "https://github.com/sony/nmos-cpp";
+    platforms = platforms.unix;
     license = licenses.asl20;
     maintainers = with maintainers; [ cfeeley ];
   };
