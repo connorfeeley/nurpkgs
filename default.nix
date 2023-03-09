@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Connor Feeley
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 # This file describes your repository contents.
 # It should return a set of nix derivations
 # and optionally the special attributes `lib`, `modules` and `overlays`.
@@ -19,6 +23,7 @@ in
   apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete { };
   aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
   inherit cpprestsdk;
+  kobopatch = pkgs.callPackage ./pkgs/applications/misc/kobopatch { };
   maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
   nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
   qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
