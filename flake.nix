@@ -23,7 +23,7 @@
       herculesCI = { ... }: {
         onPush.default = {
           # Attributes here will be built for each push.
-          outputs = { ... }: self.packages;
+          outputs = { ... }: forAllSystems (system: self.packages.${system});
         };
       };
     };
