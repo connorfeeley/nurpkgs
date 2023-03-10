@@ -11,13 +11,14 @@
 
 let
   # Pin nixpkgs for Hercules CI, which uses an empty NIX_PATH
-  pinnedPkgs = builtins.fetchTarball {
-    name = "nixpkgs";
-    url = "https://github.com/nixos/nixpkgs/archive/49596eb4e50b18337aad3b73317371bcd4e3b047.tar.gz";
-    sha256 = "1yifdz6q1p5jzsf89d3gk0nha48969kgw32air4ibyga8d7133px";
-  };
+  pathNixpkgs = builtins.tryEval <nixpkgs>;
+  nixpkgsUrl =
+    "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
+  nixpkgs = if pathNixpkgs.success
+    then pathNixpkgs.value
+    else builtins.fetchTarball { url = nixpkgsUrl; };
 in
-{ pkgs ? import pinnedPkgs { } }:
+{ pkgs ? import nixpkgs { } }:
 
 with builtins;
 let
@@ -47,13 +48,12 @@ let
   nurAttrs = import ./default.nix { inherit pkgs; };
 
   nurPkgs =
-      (listToAttrs
-        (map (n: nameValuePair n nurAttrs.${n})
-          (filter (n: !isReserved n)
-            (attrNames nurAttrs))));
+    (listToAttrs
+      (map (n: nameValuePair n nurAttrs.${n})
+        (filter (n: !isReserved n)
+          (attrNames nurAttrs))));
 
-in
-with { inherit (pkgs.lib) mapAttrs filterAttrs recurseIntoAttrs; }; recurseIntoAttrs rec {
+  inherit (pkgs.lib) mapAttrs filterAttrs recurseIntoAttrs;
   buildPkgs = filterAttrs (k: v: isBuildable v) nurPkgs;
   compatiblePkgs = filterAttrs (k: v: isCompatible v) buildPkgs;
   cachePkgs = filterAttrs (k: v: isCacheable v) compatiblePkgs;
@@ -61,4 +61,5 @@ with { inherit (pkgs.lib) mapAttrs filterAttrs recurseIntoAttrs; }; recurseIntoA
   buildOutputs = mapAttrs (k: v: outputsOf v) buildPkgs;
   compatibleOutputs = mapAttrs (k: v: outputsOf v) compatiblePkgs;
   cacheOutputs = mapAttrs (k: v: outputsOf v) cachePkgs;
-}
+in
+cachePkgs
