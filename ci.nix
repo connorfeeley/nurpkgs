@@ -47,19 +47,18 @@ let
   nurAttrs = import ./default.nix { inherit pkgs; };
 
   nurPkgs =
-    flattenPkgs
       (listToAttrs
         (map (n: nameValuePair n nurAttrs.${n})
           (filter (n: !isReserved n)
             (attrNames nurAttrs))));
 
 in
-rec {
-  buildPkgs = filter isBuildable nurPkgs;
-  compatiblePkgs = filter isCompatible buildPkgs;
-  cachePkgs = filter isCacheable compatiblePkgs;
+with { inherit (pkgs.lib) mapAttrs filterAttrs recurseIntoAttrs; }; recurseIntoAttrs rec {
+  buildPkgs = filterAttrs (k: v: isBuildable v) nurPkgs;
+  compatiblePkgs = filterAttrs (k: v: isCompatible v) buildPkgs;
+  cachePkgs = filterAttrs (k: v: isCacheable v) compatiblePkgs;
 
-  buildOutputs = concatMap outputsOf buildPkgs;
-  compatibleOutputs = concatMap outputsOf compatiblePkgs;
-  cacheOutputs = concatMap outputsOf cachePkgs;
+  buildOutputs = mapAttrs (k: v: outputsOf v) buildPkgs;
+  compatibleOutputs = mapAttrs (k: v: outputsOf v) compatiblePkgs;
+  cacheOutputs = mapAttrs (k: v: outputsOf v) cachePkgs;
 }
