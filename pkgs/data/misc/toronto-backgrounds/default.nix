@@ -93,7 +93,8 @@ let
   };
 in
 pkgs.stdenv.mkDerivation {
-  name = "toronto-backgrounds";
+  pname = "toronto-backgrounds";
+  version = "2023-03-10";
 
   src = pkgs.symlinkJoin {
     name = "toronto-backgrounds";
