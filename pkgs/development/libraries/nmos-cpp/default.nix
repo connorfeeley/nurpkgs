@@ -9,7 +9,6 @@
 , boost
 , cpprestsdk
 , nlohmann_json
-, zlib
 , avahi-compat
 , dbus
 , gtest
