@@ -10,7 +10,11 @@
 # commands such as:
 #     nix-build -A mypackage
 
-{ pkgs ? import <nixpkgs> { }, ... }:
+{ system ? builtins.currentSystem
+, overlays ? [ (import ./overlays).maintainer ]
+, pkgs ? import <nixpkgs> { inherit system overlays; }
+, ...
+}:
 let
   cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Security; };
 in
