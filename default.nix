@@ -12,7 +12,7 @@
 
 { pkgs ? import <nixpkgs> { } }:
 let
-  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
+  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Security; };
 in
 {
   # The `lib`, `modules`, and `overlay` names are special
@@ -27,6 +27,7 @@ in
   maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
   nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
   qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
+  sloth = pkgs.callPackage ./pkgs/applications/misc/sloth { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Foundation; };
   toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
   xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
 }
