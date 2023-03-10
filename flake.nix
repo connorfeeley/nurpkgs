@@ -23,7 +23,14 @@
       herculesCI = { ... }: {
         onPush.default = {
           # Attributes here will be built for each push.
-          outputs = { ... }: forAllSystems (system: self.packages.${system});
+          outputs = { ... }:
+            forAllSystems (system:
+              let
+                pkgs = import nixpkgs { inherit system; };
+                ci = import ./ci.nix { };
+              in
+              pkgs.lib.recurseIntoAttrs ci.cachePkgs);
+          # self.packages.${system});
         };
       };
     };
