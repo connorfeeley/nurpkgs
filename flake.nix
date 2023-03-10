@@ -19,5 +19,12 @@
       packages = forAllSystems (system:
         let nurpkgs = import ./default.nix { pkgs = import nixpkgs { inherit system; }; };
         in flake-utils.lib.filterPackages system nurpkgs);
+
+      herculesCI = { ... }: {
+        onPush.default = {
+          # Attributes here will be built for each push.
+          outputs = { ... }: self.packages;
+        };
+      };
     };
 }
