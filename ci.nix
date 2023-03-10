@@ -11,20 +11,20 @@
 
 let
   # Pin nixpkgs for Hercules CI, which uses an empty NIX_PATH
-  pinnedPkgs = import
-    (builtins.fetchTarball {
-      name = "nixpkgs";
-      url = "https://github.com/nixos/nixpkgs/archive/49596eb4e50b18337aad3b73317371bcd4e3b047.tar.gz";
-      sha256 = "1yifdz6q1p5jzsf89d3gk0nha48969kgw32air4ibyga8d7133px";
-    })
-    { };
+  pinnedPkgs = builtins.fetchTarball {
+    name = "nixpkgs";
+    url = "https://github.com/nixos/nixpkgs/archive/49596eb4e50b18337aad3b73317371bcd4e3b047.tar.gz";
+    sha256 = "1yifdz6q1p5jzsf89d3gk0nha48969kgw32air4ibyga8d7133px";
+  };
 in
-{ pkgs ? pinnedPkgs }:
+{ pkgs ? import pinnedPkgs { } }:
 
 with builtins;
 let
+  system = pkgs.system;
   isReserved = n: n == "lib" || n == "overlays" || n == "modules";
   isDerivation = p: isAttrs p && p ? type && p.type == "derivation";
+  isCompatible = p: (elem system (p.meta.platforms or [ ])) && !(elem system (p.meta.badPlatforms or [ ]));
   isBuildable = p: !(p.meta.broken or false) && p.meta.license.free or true;
   isCacheable = p: !(p.preferLocalBuild or false);
   shouldRecurseForDerivations = p: isAttrs p && p.recurseForDerivations or false;
@@ -56,8 +56,10 @@ let
 in
 rec {
   buildPkgs = filter isBuildable nurPkgs;
-  cachePkgs = filter isCacheable buildPkgs;
+  compatiblePkgs = filter isCompatible buildPkgs;
+  cachePkgs = filter isCacheable compatiblePkgs;
 
   buildOutputs = concatMap outputsOf buildPkgs;
+  compatibleOutputs = concatMap outputsOf compatiblePkgs;
   cacheOutputs = concatMap outputsOf cachePkgs;
 }
