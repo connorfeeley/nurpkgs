@@ -26,7 +26,7 @@
           outputs = { ... }:
             forAllSystems (system:
               let
-                pkgs = import nixpkgs { inherit system; };
+                pkgs = import nixpkgs { system = "x86_64-linux"; };
                 ci = import ./ci.nix { };
               in
               pkgs.lib.recurseIntoAttrs ci.cachePkgs);

@@ -20,12 +20,12 @@ let
     else builtins.fetchTarball { url = nixpkgsUrl; };
 
   overlays = import ./overlays;
+  system = builtins.currentSystem;
 in
-{ pkgs ? import nixpkgs { overlays = [ overlays.maintainer ]; } }:
+{ pkgs ? import nixpkgs { overlays = [ overlays.maintainer ]; inherit system; } }:
 
 with builtins;
 let
-  system = pkgs.system;
   isReserved = n: n == "lib" || n == "overlays" || n == "modules";
   isDerivation = p: isAttrs p && p ? type && p.type == "derivation";
   isCompatible = p: (elem system (p.meta.platforms or [ ])) && !(elem system (p.meta.badPlatforms or [ ]));
@@ -56,13 +56,13 @@ let
         (filter (n: !isReserved n)
           (attrNames nurAttrs))));
 
-  inherit (pkgs.lib) mapAttrs filterAttrs recurseIntoAttrs;
+in
+with { inherit (pkgs.lib) mapAttrs mapAttrsToList filterAttrs recurseIntoAttrs; }; rec {
   buildPkgs = filterAttrs (k: v: isBuildable v) nurPkgs;
   compatiblePkgs = filterAttrs (k: v: isCompatible v) buildPkgs;
   cachePkgs = filterAttrs (k: v: isCacheable v) compatiblePkgs;
 
-  buildOutputs = mapAttrs (k: v: outputsOf v) buildPkgs;
-  compatibleOutputs = mapAttrs (k: v: outputsOf v) compatiblePkgs;
-  cacheOutputs = mapAttrs (k: v: outputsOf v) cachePkgs;
-in
-cachePkgs
+  buildOutputs = mapAttrsToList (k: v: outputsOf v) buildPkgs;
+  compatibleOutputs = mapAttrsToList (k: v: outputsOf v) compatiblePkgs;
+  cacheOutputs = mapAttrsToList (k: v: outputsOf v) cachePkgs;
+}
