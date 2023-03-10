@@ -14,11 +14,14 @@ let
   pathNixpkgs = builtins.tryEval <nixpkgs>;
   nixpkgsUrl =
     "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
-  nixpkgs = if pathNixpkgs.success
+  nixpkgs =
+    if pathNixpkgs.success
     then pathNixpkgs.value
     else builtins.fetchTarball { url = nixpkgsUrl; };
+
+  overlays = import ./overlays;
 in
-{ pkgs ? import nixpkgs { } }:
+{ pkgs ? import nixpkgs { overlays = [ overlays.maintainer ]; } }:
 
 with builtins;
 let
