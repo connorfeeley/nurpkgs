@@ -18,5 +18,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/sveinbjornt/sloth";
     license = licenses.bsd3;
     maintainers = with maintainers; [ cfeeley ];
+    broken = true;
   };
 }
