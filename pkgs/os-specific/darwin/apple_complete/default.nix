@@ -32,7 +32,10 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ installShellFiles ];
 
   installPhase = ''
-    installShellCompletion --bash ${lib.concatStringsSep " " completions}
+    ${lib.concatMapStringsSep "\n" (comp: ''
+      installShellCompletion --bash ${comp}
+      installShellCompletion --zsh ${comp}
+    '') completions}
   '';
 
   passthru.updateScript = nix-update-script { };
