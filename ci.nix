@@ -30,7 +30,7 @@ let
   isDerivation = p: isAttrs p && p ? type && p.type == "derivation";
   isCompatible = p: (elem system (p.meta.platforms or [ ])) && !(elem system (p.meta.badPlatforms or [ ]));
   isBuildable = p: !(p.meta.broken or false) && p.meta.license.free or true;
-  isCacheable = p: !(p.preferLocalBuild or false);
+  isCacheable = p: !(p.preferLocalBuild or false) && (p.meta.license.free or true);
   shouldRecurseForDerivations = p: isAttrs p && p.recurseForDerivations or false;
 
   nameValuePair = n: v: { name = n; value = v; };
