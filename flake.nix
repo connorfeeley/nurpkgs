@@ -23,19 +23,5 @@
           darwinPackages = nurpkgs.darwin;
         in flake-utils.lib.filterPackages system (pkgs.lib.recursiveUpdate nurpkgs darwinPackages)
         );
-
-      herculesCI = { ... }: {
-        onPush.default = {
-          # Attributes here will be built for each push.
-          outputs = { ... }:
-            forAllSystems (system:
-              let
-                pkgs = import nixpkgs { system = "x86_64-linux"; };
-                ci = import ./ci.nix { };
-              in
-              pkgs.lib.recurseIntoAttrs ci.cachePkgs);
-          # self.packages.${system});
-        };
-      };
     };
 }
