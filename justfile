@@ -34,3 +34,11 @@ build:
   nix shell -f '<nixpkgs>' nix-build-uncached -c nix-build-uncached --show-trace ci.nix -A cacheOutputs
 
 test: eval build
+
+set shell := ["nu", "-c"]
+update:
+  alias fig = "figlet -f contrast -w 120"
+  nix eval --impure --json --expr "let pkgs = import <nixpkgs> {}; in pkgs.lib.attrNames (pkgs.lib.filterAttrs (import ./ci.nix { }).compatiblePkgs" | \
+    from json | skip { |attr| nix } | each {|attr| \
+      try { "fig $attr"; nix-update --build --test --format $attr } | \
+      echo "Done $attr" }
