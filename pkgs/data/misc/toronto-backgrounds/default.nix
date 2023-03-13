@@ -108,7 +108,10 @@ pkgs.stdenv.mkDerivation {
     cp -r $src/share/backgrounds/* $out/share/backgrounds
   '';
 
-  passthru = lib.mapAttrs' (k: v: lib.nameValuePair (sanitizeDerivationName k) v.passthru) torontoWallpapers;
+  passthru = {
+    wallpapers = lib.mapAttrs' (k: v: lib.nameValuePair (sanitizeDerivationName k) v.passthru) torontoWallpapers;
+    disableUpgrade = true;
+  };
 
   meta = with lib; {
     description = "Personal collection of wallpaper images of Toronto, Canada";
