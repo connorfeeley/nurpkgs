@@ -17,8 +17,12 @@
     in
     {
       packages = forAllSystems (system:
-        let nurpkgs = import ./default.nix { pkgs = import nixpkgs { inherit system; }; };
-        in flake-utils.lib.filterPackages system nurpkgs);
+        let
+          pkgs = import nixpkgs { inherit system; };
+          nurpkgs = import ./default.nix { inherit pkgs; };
+          darwinPackages = nurpkgs.darwin;
+        in flake-utils.lib.filterPackages system (pkgs.lib.recursiveUpdate nurpkgs darwinPackages)
+        );
 
       herculesCI = { ... }: {
         onPush.default = {

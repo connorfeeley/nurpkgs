@@ -16,9 +16,7 @@
 , ...
 }:
 let
-  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Security; };
-
-  darwin = pkgs.callPackage ./darwin-packages.nix { };
+  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
 in
 {
   # The `lib`, `modules`, and `overlay` names are special
@@ -28,7 +26,7 @@ in
 
   aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
   inherit cpprestsdk;
-  inherit darwin;
+  darwin = pkgs.darwin.callPackage ./darwin-packages.nix { };
   kobopatch = pkgs.callPackage ./pkgs/applications/misc/kobopatch { };
   nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
   # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
