@@ -107,7 +107,7 @@ let
     };
   };
 in
-buildFHSUserEnv rec {
+if (stdenv.isLinux && stdenv.isx86_64) then buildFHSUserEnv rec {
   name = "xsct-wrapper"; # wrapped
 
   targetPkgs = pkgs: with pkgs; [
@@ -369,4 +369,12 @@ buildFHSUserEnv rec {
     echo "$LD_LIBRARY_PATH"
     exec "$@"
   '';
-}
+
+  meta = with lib; {
+    homepage = "https://www.xilinx.com/htmldocs/xilinx2019_1/SDK_Doc/xsct/intro/xsct_introduction.html";
+    description = "Xilinx Software Command-Line Tools";
+    license = licenses.unfree;
+    platforms = platforms.linux;
+    maintainers = [ maintainers.cfeeley ];
+  };
+} else xsct
