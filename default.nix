@@ -17,6 +17,8 @@
 }:
 let
   cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Security; };
+
+  darwin = pkgs.callPackage ./darwin-packages.nix { };
 in
 {
   # The `lib`, `modules`, and `overlay` names are special
@@ -24,14 +26,12 @@ in
   # modules = import ./modules; # NixOS modules
   # overlays = import ./overlays; # nixpkgs overlays
 
-  apple_complete = pkgs.callPackage ./pkgs/os-specific/darwin/apple_complete { };
   aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
   inherit cpprestsdk;
+  inherit darwin;
   kobopatch = pkgs.callPackage ./pkgs/applications/misc/kobopatch { };
-  maclaunch = pkgs.callPackage ./pkgs/os-specific/darwin/maclaunch { };
   nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
   # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
-  sloth = pkgs.callPackage ./pkgs/applications/misc/sloth { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Foundation; };
   toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
   xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
 }
