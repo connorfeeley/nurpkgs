@@ -44,7 +44,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - uses: cachix/cachix-action@v10
         with:
-          name: nix-community
+          name: cfeeley
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - run: nix shell -f '<nixpkgs>' nix-build-uncached -c nix-build-uncached -build-flags "-L" --keep-going --show-trace ./. -A ${{ matrix.attr }}
 
@@ -60,6 +60,6 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - uses: cachix/cachix-action@v10
         with:
-          name: nix-community
+          name: cfeeley
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - run: nix shell -f '<nixpkgs>' nix-build-uncached -c nix-build-uncached -build-flags "-L" --keep-going --show-trace ./. -A ${{ matrix.attr }}
