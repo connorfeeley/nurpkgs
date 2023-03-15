@@ -1,20 +1,16 @@
 # SPDX-FileCopyrightText: 2023 Connor Feeley
 #
 # SPDX-License-Identifier: BSD-3-Clause
-{ lib, stdenv, fetchFromGitHub, undmg }:
+{ lib, stdenv, fetchdmg }:
 
 stdenv.mkDerivation rec {
-  pname = "better-display";
+  pname = "betterdisplay";
   version = "1.4.6";
 
-  src = fetchFromGitHub {
-    owner = "waydabber";
-    repo = "BetterDisplay";
-    rev = "v${version}";
-    hash = "sha256-Fu0K4xfxg0PipZUbACxRjG+hP3q9d95CVfjYUUjo83E=";
+  src = fetchdmg {
+    url = "https://github.com/waydabber/BetterDisplay/releases/download/v${version}/BetterDisplay-v${version}.dmg";
+    hash = "sha256-MKlJOFRpYDx2bnGrm08gQ40YLatD3sI10f1Z4uwh3so=";
   };
-
-  nativeBuildInputs = [ undmg ];
 
   installPhase = ''
     mkdir -p $out/Applications
