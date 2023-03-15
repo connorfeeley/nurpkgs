@@ -31,6 +31,7 @@ let
       # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
       inherit tests;
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
+      xantfarm = callPackage ./pkgs/applications/misc/xantfarm { };
       xsct = callPackage ./pkgs/applications/misc/xsct { };
 
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { }
