@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-{ pkgs, callPackage }:
+{ callPackage }:
 
 {
   fetchdmg = callPackage ../build-support/fetchdmg/tests.nix { };
