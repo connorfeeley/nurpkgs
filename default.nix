@@ -19,8 +19,9 @@ let
   top-level = pkgs.lib.makeScope pkgs.newScope (self:
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
-      tests = callPackage ./pkgs/test { };
       darwin = callPackage ./darwin-packages.nix { };
+      linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
+      tests = callPackage ./pkgs/test { };
     in
     {
       aranet4 = callPackage ./pkgs/development/python-modules/aranet4 { };
@@ -32,6 +33,7 @@ let
       inherit tests;
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
       xsct = callPackage ./pkgs/applications/misc/xsct { };
+      inherit linuxKernel;
 
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { }
         // {
