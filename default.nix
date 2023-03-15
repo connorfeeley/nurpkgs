@@ -38,10 +38,11 @@ let
         tests = tests.fetchdmg;
       };
     });
+  special = {
+    # The `lib`, `modules`, and `overlay` names are special
+    # lib = import ./lib { inherit pkgs; }; # functions
+    # modules = import ./modules; # NixOS modules
+    # overlays = import ./overlays; # nixpkgs overlays
+  };
 in
-top-level // {
-  # The `lib`, `modules`, and `overlay` names are special
-  # lib = import ./lib { inherit pkgs; }; # functions
-  # modules = import ./modules; # NixOS modules
-  # overlays = import ./overlays; # nixpkgs overlays
-}
+top-level // special
