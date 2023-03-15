@@ -16,20 +16,32 @@
 , ...
 }:
 let
-  cpprestsdk = pkgs.callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
+  top-level = pkgs.lib.makeScope pkgs.newScope (self:
+    let inherit (self) callPackage;
+      cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
+      tests = callPackage ./pkgs/test { };
+      darwin = callPackage ./darwin-packages.nix { };
+    in
+    {
+      aranet4 = callPackage ./pkgs/development/python-modules/aranet4 { };
+      inherit cpprestsdk;
+      inherit darwin;
+      kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
+      nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
+      # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
+      inherit tests;
+      toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
+      xsct = callPackage ./pkgs/applications/misc/xsct { };
+
+      fetchdmg = callPackage ./pkgs/build-support/fetchdmg { }
+        // {
+        tests = tests.fetchdmg;
+      };
+    });
 in
-{
+top-level // {
   # The `lib`, `modules`, and `overlay` names are special
   # lib = import ./lib { inherit pkgs; }; # functions
   # modules = import ./modules; # NixOS modules
   # overlays = import ./overlays; # nixpkgs overlays
-
-  aranet4 = pkgs.callPackage ./pkgs/development/python-modules/aranet4 { };
-  inherit cpprestsdk;
-  darwin = pkgs.darwin.callPackage ./darwin-packages.nix { };
-  kobopatch = pkgs.callPackage ./pkgs/applications/misc/kobopatch { };
-  nmos-cpp = pkgs.callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
-  # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
-  toronto-backgrounds = pkgs.callPackage ./pkgs/data/misc/toronto-backgrounds { };
-  xsct = pkgs.callPackage ./pkgs/applications/misc/xsct { };
 }
