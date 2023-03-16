@@ -26,6 +26,7 @@ let
       aranet4 = callPackage ./pkgs/development/python-modules/aranet4 { };
       inherit cpprestsdk;
       inherit darwin;
+      fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
@@ -33,11 +34,6 @@ let
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
       xantfarm = callPackage ./pkgs/applications/misc/xantfarm { };
       xsct = callPackage ./pkgs/applications/misc/xsct { };
-
-      fetchdmg = callPackage ./pkgs/build-support/fetchdmg { }
-        // {
-        tests = tests.fetchdmg;
-      };
     });
   special = {
     # The `lib`, `modules`, and `overlay` names are special
