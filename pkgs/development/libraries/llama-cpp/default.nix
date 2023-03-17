@@ -31,6 +31,7 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Locally run an Instruction-Tuned Chat-Style LLM";
+    mainProgram = "chat";
     license = licenses.mit;
     maintainers = [ maintainers.cfeeley ];
     platforms = platforms.all;
