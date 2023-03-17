@@ -28,6 +28,7 @@ let
       inherit darwin;
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
+      llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
       inherit tests;
