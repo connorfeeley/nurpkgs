@@ -21,6 +21,7 @@ let
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
       tests = callPackage ./pkgs/test { };
       darwin = callPackage ./darwin-packages.nix { };
+      linux = callPackage ./pkgs/top-level/linux-kernels.nix { };
     in
     {
       aranet4 = callPackage ./pkgs/development/python-modules/aranet4 { };
@@ -28,6 +29,7 @@ let
       inherit darwin;
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
+      inherit linux;
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
