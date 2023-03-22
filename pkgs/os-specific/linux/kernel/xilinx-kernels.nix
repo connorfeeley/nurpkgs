@@ -29,6 +29,7 @@ let
           branch = rev;
           maintainers = with lib.maintainers; [ cfeeley ];
           description = "The official Linux kernel from Xilinx.";
+          platforms = lib.platforms.aarch64;
         };
       } // (args.argsOverride or { }));
 
