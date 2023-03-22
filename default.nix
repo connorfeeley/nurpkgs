@@ -20,6 +20,7 @@ let
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
       darwin = callPackage ./darwin-packages.nix { };
+      # linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       tests = callPackage ./pkgs/test { };
     in
