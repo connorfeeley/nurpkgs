@@ -24,7 +24,7 @@
 let
   kernels = recurseIntoAttrs (lib.makeExtensible (self:
     let callPackage = newScope self; in {
-      linux_xlnx = callPackage ./pkgs/os-specific/linux/kernel/xilinx-kernels.nix { };
+      linux_xlnx = recurseIntoAttrs (callPackage ./pkgs/os-specific/linux/kernel/xilinx-kernels.nix { });
     }));
 in
 {

@@ -30,6 +30,7 @@ let
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
       inherit linuxKernel;
+      inherit (linuxKernel.linux_xlnx.kernel) xilinx_v2021_2;
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       # qemu-xilinx = pkgs.callPackage ./pkgs/applications/virtualization/qemu { };
