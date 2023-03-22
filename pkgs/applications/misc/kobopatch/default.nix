@@ -21,6 +21,7 @@ buildGoModule rec {
     homepage = "https://github.com/pgaskin/kobopatch";
     license = licenses.mit;
     maintainers = with maintainers; [ cfeeley ];
+    broken = true;
     platforms = platforms.unix;
   };
 }
