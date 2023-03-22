@@ -7,17 +7,15 @@
 let
   stdenv = gcc10Stdenv;
 
-  xlnx_2021_2 = {
-    rev = "xilinx-v2021.2"; # ex: 2021.2
+  kernels.v2021_2 = {
+    rev = "xilinx-v2021.2"; # ex: xilinx-v2021.2
     version = "5.10.0";
-    prefix = ""; # ex: _update1
-    suffix = "xilinx-v2021.2"; # ex: xlnx_rebase_v5.15_LTS_
+    suffix = "xilinx-v2021.2"; # appended to version; ex: 5.10.0-xilinx-v2021.2
     hash = "sha256-69jOJObVePDJ1Z31o1rXgg2XHtahB1SVxmA5hSMy0Ds=";
   };
 
   xlnxKernelsFor = { rev, version, prefix ? "", suffix ? "", hash }:
-    lib.overrideDerivation
-      (buildLinux (args // {
+    buildLinux (args // {
         inherit version;
         modDirVersion = lib.versions.pad 3 "${version}-${suffix}";
 
@@ -32,26 +30,19 @@ let
           maintainers = with lib.maintainers; [ cfeeley ];
           description = "The official Linux kernel from Xilinx.";
         };
+      } // (args.argsOverride or { }));
 
-        buildPackages = args.buildPackages;
-        inherit kernelPatches;
-      } // (args.argsOverride or { })))
-      (oldAttrs: {
-        kernelPreferBuiltin = true;
-        ignoreConfigErrors = true;
-        autoModules = true;
-        depsBuildBuild = [ stdenv.cc ];
-      });
+  # Cannot be built directly, but can be used as a source for linuxManualConfig
+  xilinx_v2021_2 = xlnxKernelsFor kernels.v2021_2;
 
-  xlnx_2021_2-kernel = xlnxKernelsFor xlnx_2021_2;
-
-  manualKernel = linuxManualConfig {
-    inherit (xlnx_2021_2-kernel) src version modDirVersion;
+  # Can be built directly
+  zynqmp-v2021_2 = linuxManualConfig {
+    inherit (xilinx_v2021_2) src version modDirVersion;
     configfile = ./xilinx_zynqmp_defconfig;
     allowImportFromDerivation = false;
     inherit stdenv;
   };
 in
 {
-  inherit xlnx_2021_2 manualKernel xlnx_2021_2-kernel;
+  inherit xilinx_v2021_2 zynqmp-v2021_2;
 }
