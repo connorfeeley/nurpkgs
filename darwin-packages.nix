@@ -13,5 +13,6 @@ lib.makeScope newScope (self: let inherit (self) callPackage; in {
   betterdisplay = callPackage ./pkgs/os-specific/darwin/betterdisplay { };
   launchcontrol = callPackage ./pkgs/os-specific/darwin/launchcontrol { };
   maclaunch = callPackage ./pkgs/os-specific/darwin/maclaunch { };
+  mac-stats = callPackage ./pkgs/os-specific/darwin/mac-stats { };
   sloth = callPackage ./pkgs/applications/misc/sloth { inherit (pkgs.darwin.apple_sdk_11_0.frameworks) Foundation; };
 })
