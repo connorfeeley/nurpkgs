@@ -33,6 +33,7 @@ let
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
+      time = callPackage ./pkgs/development/libraries/time { };
       xilinx-qemu = pkgs.callPackage ./pkgs/applications/virtualization/xilinx-qemu { inherit (pkgs.darwin.apple_sdk.frameworks) CoreAudio Cocoa; inherit (pkgs.darwin.stubs) rez setfile; };
       inherit tests;
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
