@@ -81,7 +81,7 @@ stdenv.mkDerivation rec {
   doCheck = false; # Failures: 117 127 143 156 191
 
   meta = with lib; {
-    homepage = "https://github.com/Xilinx/qemu";
+    homepage = "https://docs.xilinx.com/v/u/en-US/ug1169-xilinx-qemu";
     description = "Xilinx's fork of Quick EMUlator (QEMU) with improved support and modelling for the Xilinx platforms.";
     maintainers = [ maintainers.cfeeley ];
     license = licenses.gpl2Plus;
