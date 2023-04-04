@@ -20,11 +20,12 @@ let
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
       darwin = callPackage ./darwin-packages.nix { };
+      pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       tests = callPackage ./pkgs/test { };
     in
     {
-      aranet4 = callPackage ./pkgs/development/python-modules/aranet4 { };
+      inherit pythonPackages;
       inherit cpprestsdk;
       inherit darwin;
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };

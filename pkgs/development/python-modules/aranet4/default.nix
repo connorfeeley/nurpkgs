@@ -2,9 +2,15 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-{ lib, python3, fetchFromGitHub, nix-update-script }:
+{ lib
+, fetchFromGitHub
+, buildPythonApplication
+, bleak
+, requests
+, nix-update-script
+}:
 
-python3.pkgs.buildPythonApplication rec {
+buildPythonApplication rec {
   pname = "aranet4";
   version = "2.1.3";
   format = "setuptools";
@@ -16,7 +22,7 @@ python3.pkgs.buildPythonApplication rec {
     hash = "sha256-5q4eOC9iuN8pUmDsiQ7OwEXkxi4KdL+bhGVjlQlTBAg=";
   };
 
-  propagatedBuildInputs = with python3.pkgs; [
+  propagatedBuildInputs = [
     bleak
     requests
   ];
