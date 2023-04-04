@@ -19,18 +19,15 @@ let
   top-level = pkgs.lib.makeScope pkgs.newScope (self:
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
-      darwin = callPackage ./darwin-packages.nix { };
-      pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
-      linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       tests = callPackage ./pkgs/test { };
     in
     {
-      inherit pythonPackages;
+      pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       inherit cpprestsdk;
-      inherit darwin;
+      darwin = callPackage ./darwin-packages.nix { };
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
-      inherit linuxKernel;
+      linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
