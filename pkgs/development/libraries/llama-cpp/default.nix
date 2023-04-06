@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation {
   pname = "llama-cpp";
-  version = "2023-03-17";
+  version = "2023-04-06";
 
   src = fetchFromGitHub {
     owner = "antimatter15";
     repo = "alpaca.cpp";
-    rev = "da0e9fe90ccf6e73597eb19dd0cfc0a28363fb3b";
-    hash = "sha256-LwwAwoKug1DawfCirW6qQkyifhONH/5OfjM7p9QQ9mM=";
+    rev = "a0c74a70194284e943020cb43d8072a048aaeec5";
+    hash = "sha256-1WyqOhq3MjnVevqgQALKE8+AvET1kQYo7wXuSG6ZpmE=";
   };
 
   nativeBuildInputs = [ cmake pkg-config ] ++
@@ -26,12 +26,13 @@ stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out/bin
-    install -m755 bin/llama bin/quantize $out/bin
+    install -m755 chat quantize $out/bin
+    install -m755 libggml.a $out/lib
   '';
 
   meta = with lib; {
     description = "Locally run an Instruction-Tuned Chat-Style LLM";
-    mainProgram = "llama";
+    mainProgram = "chat";
     license = licenses.mit;
     maintainers = [ maintainers.cfeeley ];
     platforms = platforms.all;
