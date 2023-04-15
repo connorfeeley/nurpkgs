@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Connor Feeley
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 {
   description = "My personal NUR repository";
   inputs.flake-utils.url = "github:numtide/flake-utils";
