@@ -12,7 +12,7 @@
 
 buildDunePackage rec {
   pname = "rescript";
-  version = "v11.0.0-beta.1";
+  version = "v11.0.0-beta.1"; # TODO: update to v11.0.0 when released
   duneVersion = "2";
 
   minimalOCamlVersion = "4.10";

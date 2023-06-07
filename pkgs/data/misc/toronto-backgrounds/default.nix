@@ -11,7 +11,8 @@ let
 
   mkWallpaper = name': { class, url, hash }:
     let name = sanitizeDerivationName name';
-    in pkgs.stdenv.mkDerivation rec {
+    in
+    pkgs.stdenv.mkDerivation rec {
       pname = sanitizeDerivationName "toronto-${name}-backgrounds";
       version = "0.0.1";
 
@@ -29,6 +30,8 @@ let
       };
       meta = { inherit license; };
     };
+
+  # TODO: Add https://pbs.twimg.com/media/Fue1ydEWIAAfs0U?format=jpg&name=large / https://twitter.com/jamesmckz/status/1650487672773783552/photo/1
 
   torontoWallpapers = lib.mapAttrs (k: v: mkWallpaper k v) {
     "Old City Hall Bay Night" = {
