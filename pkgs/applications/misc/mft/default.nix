@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, kernel, linux, kmod, pciutils, pahole }:
+{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, kernel, kmod, pciutils, pahole }:
 
 stdenv.mkDerivation rec {
   name = "mft-${version}";
@@ -96,4 +96,12 @@ stdenv.mkDerivation rec {
   '';
 
   dontStrip = true;
+
+  meta = with lib; {
+    description = "Mellanox Firmware Tools";
+    homepage = "https://network.nvidia.com/products/adapter-software/firmware-tools/";
+    license = licenses.unfree;
+    maintainers = with maintainers; [ cfeeley ];
+    platforms = platforms.linux;
+  };
 }
