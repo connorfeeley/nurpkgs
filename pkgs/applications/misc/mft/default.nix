@@ -58,7 +58,7 @@ stdenv.mkDerivation rec {
     for BIN in $(find $out/bin -type f); do
       if $(file $BIN | grep -q "ELF"); then
         echo "Patching $BIN"
-        patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" --set-rpath "${glibc}/lib:${gcc.cc}/lib:$out/lib" $BIN
+        patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" --set-rpath "${glibc}/lib:${gcc.cc}/lib:${stdenv.cc.cc.lib}/lib:$out/lib" $BIN
       elif ! $(file $BIN | grep -q "binary data"); then
         echo "Patching $BIN"
         substituteInPlace $BIN --replace "mbindir=/usr/bin" "mbindir=$out/bin"
