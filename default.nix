@@ -29,6 +29,7 @@ let
       linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       mdio-tools = callPackage ./pkgs/os-specific/linux/mdio-tools { };
+      mft = callPackage ./pkgs/applications/misc/mft { };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
