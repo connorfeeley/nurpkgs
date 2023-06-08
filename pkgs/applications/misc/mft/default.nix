@@ -2,15 +2,15 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-{ stdenv, fetchurl, dpkg, file, glibc, gcc, linux, kmod, pciutils, pahole }:
+{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, linux, kmod, pciutils, pahole }:
 
 stdenv.mkDerivation rec {
   name = "mft-${version}";
-  version = "4.3.0-25";
+  version = "4.22.1-11";
 
   src = fetchurl {
-    url = "http://www.mellanox.com/downloads/MFT/${name}.tgz";
-    sha256 = "0vmx8s6fqqrwjwsyaqkmfbjg4xr3gp3rk8xjkczz37i8r6qq5d5j";
+    url = "https://www.mellanox.com/downloads/MFT/${name}-x86_64-deb.tgz";
+    hash = "sha256-FCknQ9jmjUkU2fkOeI2O62BPl/J8IWb4Rsl6xHa8olA=";
   };
 
   buildInputs = [ dpkg file pahole ];
@@ -19,10 +19,10 @@ stdenv.mkDerivation rec {
     dpkg-deb -R $sourceRoot/SDEBS/kernel-mft-dkms_${version}_all.deb $TMPDIR
     rm -rf $TMPDIR/DEBIAN
 
-    dpkg-deb -R $sourceRoot/DEBS/mft-${version}.amd64.deb $TMPDIR
+    dpkg-deb -R $sourceRoot/DEBS/mft_${version}_amd64.deb $TMPDIR
     rm -rf $TMPDIR/DEBIAN
 
-    dpkg-deb -R $sourceRoot/DEBS/mft-oem-${version}.amd64.deb $TMPDIR
+    dpkg-deb -R $sourceRoot/DEBS/mft-oem_${version}_amd64.deb $TMPDIR
     rm -rf $TMPDIR/DEBIAN
   '';
 
@@ -31,16 +31,20 @@ stdenv.mkDerivation rec {
       --replace "/sbin/modprobe" "${kmod}/bin/modprobe" \
       --replace "/usr/bin/lspci" "${pciutils}/bin/lspci" \
       --replace "/sbin/lsmod" "${kmod}/bin/lsmod"
+
     substituteInPlace $TMPDIR/etc/mft/mft.conf \
       --replace "/usr" "$out"
+
+    substituteInPlace $TMPDIR/usr/src/kernel-mft-dkms-${lib.versions.major version}.${lib.versions.minor version}.${lib.versions.patch version}/mst_backward_compatibility/*/Makefile \
+      --replace '/lib/modules/$(KVERSION)/build' '$(KSRC)'
   '';
 
   # build kernel modules
   buildPhase = ''
-    pushd $TMPDIR/usr/src/kernel-mft-dkms-4.3.0
+    pushd $TMPDIR/usr/src/kernel-mft-dkms-${lib.versions.major version}.${lib.versions.minor version}.${lib.versions.patch version}
     make KSRC=${linux.dev}/lib/modules/${linux.modDirVersion}/build
     mkdir -p $out/lib/modules/${linux.modDirVersion}/
-    cp *.ko $out/lib/modules/${linux.modDirVersion}/
+    cp ./mst_backward_compatibility/*/*.ko $out/lib/modules/${linux.modDirVersion}/
     popd
   '';
 
