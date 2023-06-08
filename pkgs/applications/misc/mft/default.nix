@@ -64,9 +64,9 @@ stdenv.mkDerivation rec {
     mkdir -p $out
     cp -r $TMPDIR/{etc,usr/{bin,lib64,share}} $out
     substituteInPlace $out/etc/init.d/mst --replace "mbindir=/usr/bin" "mbindir=$out/bin"
+    substituteInPlace $out/etc/init.d/mst --replace "mlibdir=/usr/lib64" "mlibdir=$out/lib64"
     unlink $out/bin/mst
     ln -sf $out/etc/init.d/mst $out/bin/mst
-    echo "BINS $(find $out/bin -type f)"
     for BIN in $(find $out/bin -type f); do
       if $(file $BIN | grep -q "ELF"); then
         echo "Patching $BIN"
@@ -74,6 +74,21 @@ stdenv.mkDerivation rec {
       elif ! $(file $BIN | grep -q "binary data"); then
         echo "Patching $BIN"
         substituteInPlace $BIN --replace "mbindir=/usr/bin" "mbindir=$out/bin"
+        substituteInPlace $BIN --replace "mlibdir=/usr/lib64" "mlibdir=$out/lib64"
+      else
+        echo "Skipping $BIN"
+      fi
+    done
+    for LIB in $(find $out/lib64/mft/python_tools -type f); do
+      if $(file $LIB | grep -q "ELF"); then
+        echo "Patching $LIB"
+        patchelf --set-rpath "${glibc}/lib:${gcc.cc}/lib:${stdenv.cc.cc.lib}/lib:$out/lib" $LIB
+      elif ! $(file $LIB | grep -q "binary data"); then
+        echo "Patching $LIB"
+        substituteInPlace $LIB --replace "mbindir=/usr/bin" "mbindir=$out/bin"
+        substituteInPlace $LIB --replace "mlibdir=/usr/lib64" "mlibdir=$out/lib64"
+      else
+        echo "Skipping $LIB"
       fi
     done
   '';
