@@ -100,7 +100,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Mellanox Firmware Tools";
     homepage = "https://network.nvidia.com/products/adapter-software/firmware-tools/";
-    license = licenses.unfree;
     maintainers = with maintainers; [ cfeeley ];
     platforms = platforms.linux;
   };
