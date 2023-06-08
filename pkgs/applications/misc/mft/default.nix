@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, linux, kmod, pciutils, pahole }:
+{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, kernel, linux, kmod, pciutils, pahole }:
 
 stdenv.mkDerivation rec {
   name = "mft-${version}";
@@ -13,7 +13,16 @@ stdenv.mkDerivation rec {
     hash = "sha256-FCknQ9jmjUkU2fkOeI2O62BPl/J8IWb4Rsl6xHa8olA=";
   };
 
+  hardeningDisable = [ "pic" "format" ];
+
   buildInputs = [ dpkg file pahole ];
+  nativeBuildInputs = kernel.moduleBuildDependencies;
+
+  makeFlags = [
+    "KERNELRELEASE=${kernel.modDirVersion}"
+    "KERNEL_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
+    "INSTALL_MOD_PATH=$(out)"
+  ];
 
   postUnpack = ''
     dpkg-deb -R $sourceRoot/SDEBS/kernel-mft-dkms_${version}_all.deb $TMPDIR
@@ -42,9 +51,12 @@ stdenv.mkDerivation rec {
   # build kernel modules
   buildPhase = ''
     pushd $TMPDIR/usr/src/kernel-mft-dkms-${lib.versions.major version}.${lib.versions.minor version}.${lib.versions.patch version}
-    make KSRC=${linux.dev}/lib/modules/${linux.modDirVersion}/build
-    mkdir -p $out/lib/modules/${linux.modDirVersion}/
-    cp ./mst_backward_compatibility/*/*.ko $out/lib/modules/${linux.modDirVersion}/
+    make KSRC=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build \
+      KERNELRELEASE=${kernel.modDirVersion} \
+      KERNEL_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build \
+      INSTALL_MOD_PATH=$out
+    mkdir -p $out/lib/modules/${kernel.modDirVersion}/
+    cp ./mst_backward_compatibility/*/*.ko $out/lib/modules/${kernel.modDirVersion}/
     popd
   '';
 
