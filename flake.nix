@@ -27,6 +27,7 @@
         in
         flake-utils.lib.filterPackages system (pkgs.lib.recursiveUpdate nurpkgs darwinPackages)
       );
+      nixosModules = import ./modules;
       overlays.default = import ./overlay.nix;
     };
 }
