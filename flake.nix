@@ -24,7 +24,9 @@
           pkgs = import nixpkgs { inherit system; };
           nurpkgs = import ./default.nix { inherit pkgs; };
           darwinPackages = nurpkgs.darwin;
-        in flake-utils.lib.filterPackages system (pkgs.lib.recursiveUpdate nurpkgs darwinPackages)
-        );
+        in
+        flake-utils.lib.filterPackages system (pkgs.lib.recursiveUpdate nurpkgs darwinPackages)
+      );
+      overlays.default = import ./overlay.nix;
     };
 }
