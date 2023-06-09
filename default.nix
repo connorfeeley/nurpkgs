@@ -23,10 +23,10 @@ let
     in
     {
       inherit cpprestsdk;
-      darwin = callPackage ./darwin-packages.nix { };
+      darwinPackages = callPackage ./darwin-packages.nix { };
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
-      linuxKernel = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
+      linux-xlnx = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       mdio-tools = callPackage ./pkgs/os-specific/linux/mdio-tools { };
       mft = callPackage ./pkgs/applications/misc/mft { kernel = pkgs.linux; };
@@ -35,7 +35,7 @@ let
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
       rescript = pkgs.ocamlPackages.callPackage ./pkgs/development/compilers/rescript { };
       inherit tests;
-      time = callPackage ./pkgs/development/libraries/time { };
+      meta-time = callPackage ./pkgs/development/libraries/time { };
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
       xantfarm = callPackage ./pkgs/applications/misc/xantfarm { };
       xilinx-qemu = pkgs.callPackage ./pkgs/applications/virtualization/xilinx-qemu { inherit (pkgs.darwin.apple_sdk.frameworks) CoreAudio Cocoa; inherit (pkgs.darwin.stubs) rez setfile; };
