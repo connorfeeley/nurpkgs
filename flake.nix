@@ -23,7 +23,7 @@
         let
           pkgs = import nixpkgs { inherit system; config = { allowUnfree = true; }; };
           nurpkgs = import ./default.nix { inherit pkgs; };
-          darwinPackages = nurpkgs.darwin;
+          darwinPackages = nurpkgs.darwinPackages;
         in
         flake-utils.lib.filterPackages system (pkgs.lib.recursiveUpdate nurpkgs darwinPackages)
       );
