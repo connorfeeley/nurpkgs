@@ -21,7 +21,7 @@
     {
       packages = forAllSystems (system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import nixpkgs { inherit system; config = { allowUnfree = true; }; };
           nurpkgs = import ./default.nix { inherit pkgs; };
           darwinPackages = nurpkgs.darwin;
         in
