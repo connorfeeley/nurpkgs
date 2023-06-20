@@ -85,13 +85,13 @@ let
     "Streetcar 506 College-Yonge" = {
       class = "dark";
       url = "https://unsplash.com/photos/OvKHfwmRq-o/download?ixid=MnwxMjA3fDB8MXxhbGx8MTl8fHx8fHwyfHwxNjc2MjU4Mjgx&force=true";
-      hash = "sha256-rlO68dZ0CS6uZMTvdNKOy3koKopUqJy1g7FNgKlSMrw=";
+      hash = "sha256-7EzE/62Vc5AOzcYDlrSvaHz2WrIcpQ07rQxFTXtN0HI=";
     };
     "Glen Road Bridge" = {
       class = "light";
       # https://twitter.com/SwanBoatSteve/status/1632021109737508869/photo/1
       url = "https://pbs.twimg.com/media/FqYaefhWIAUiwAV?format=jpg";
-      hash = "sha256-sbRIcWZLcb5Vo5q3zcIrrmr20/+1yzQXPsFdNL8Iqf8=";
+      hash = "sha256-4rmYkaVa2uvtM5defXM6rNcQGJqgMnOgxWOi0qaxLo0=";
     };
     # Featuring Toronto's *official* mascot
     "Gooderman Flatiron Building Raccoon" = {
