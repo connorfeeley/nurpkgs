@@ -36,6 +36,7 @@ let
       inherit cpprestsdk;
       darwinPackages = callPackage ./darwin-packages.nix { };
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
+      github-copilot-cli = callPackage ./pkgs/applications/misc/github-copilot-cli/default.nix { };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
       linux-xlnx = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
