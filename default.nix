@@ -34,6 +34,7 @@ let
       pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
       rescript = pkgs.ocamlPackages.callPackage ./pkgs/development/compilers/rescript { };
+      sourcetrail-ng = pkgs.callPackage ./pkgs/development/tools/sourcetrail { };
       inherit tests;
       meta-time = callPackage ./pkgs/development/libraries/time { };
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
