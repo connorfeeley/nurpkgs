@@ -20,6 +20,16 @@ let
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
       tests = callPackage ./pkgs/test { };
+      sourcetrail-ng =
+        let
+          llvmPackages = pkgs.llvmPackages_10;
+        in
+        pkgs.libsForQt5.callPackage ./pkgs/development/tools/sourcetrail {
+          stdenv = if pkgs.stdenv.cc.isClang then llvmPackages.stdenv else pkgs.stdenv;
+          jdk = pkgs.jdk8;
+          pythonPackages = pkgs.python3Packages;
+          inherit llvmPackages;
+        };
     in
     {
       inherit cpprestsdk;
@@ -34,7 +44,7 @@ let
       pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
       rescript = pkgs.ocamlPackages.callPackage ./pkgs/development/compilers/rescript { };
-      sourcetrail-ng = pkgs.callPackage ./pkgs/development/tools/sourcetrail { };
+      inherit sourcetrail-ng;
       inherit tests;
       meta-time = callPackage ./pkgs/development/libraries/time { };
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
