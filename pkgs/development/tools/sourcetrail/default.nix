@@ -1,18 +1,9 @@
 { lib, stdenv, fetchFromGitHub, callPackage, writeScript, fetchpatch, cmake
-, wrapQtAppsHook, qt5, boost, llvmPackages, gcc, jdk, maven, pythonPackages
+, wrapQtAppsHook, qt5, boost, llvmPackages, gcc, jdk, jre, maven, pythonPackages
 , coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
 }:
 
 let
-  # TODO: remove when version incompatibility issue with python3Packages.jedi is
-  # resolved
-  parso = pythonPackages.callPackage ./parso.nix { };
-  jedi = pythonPackages.callPackage ./jedi.nix { inherit parso; };
-
-  pythonIndexer =
-    pythonPackages.callPackage ./python.nix { inherit jedi parso; };
-  javaIndexer = callPackage ./java.nix { };
-
   appPrefixDir = if stdenv.isDarwin then
     "$out/Applications/Sourcetrail.app/Contents"
   else
@@ -24,27 +15,6 @@ let
   else
     "${appPrefixDir}/share";
 
-  # Upstream script:
-  # https://github.com/CoatiSoftware/Sourcetrail/blob/master/script/update_java_indexer.sh
-  installJavaIndexer = writeScript "update_java_indexer.sh" ''
-    #!${stdenv.shell}
-
-    cd "$(dirname "$0")/.."
-    dst="${appResourceDir}/data/java/lib"
-
-    mkdir -p "$dst"
-    cp "${javaIndexer}/target/java-indexer-1.0.jar" "$dst/java-indexer.jar"
-    cp -r java_indexer/lib/*.jar "$dst"
-  '';
-
-  # Upstream script:
-  # https://github.com/CoatiSoftware/Sourcetrail/blob/master/script/download_python_indexer.sh
-  installPythonIndexer = writeScript "download_python_indexer.sh" ''
-    #!${stdenv.shell}
-
-    mkdir -p ${appResourceDir}/data
-    ln -s "${pythonIndexer}/bin" "${appResourceDir}/data/python"
-  '';
 in stdenv.mkDerivation rec {
   pname = "sourcetrail-ng";
   # NOTE: skip 2020.4.35 https://github.com/CoatiSoftware/Sourcetrail/pull/1136
@@ -82,19 +52,18 @@ in stdenv.mkDerivation rec {
     wrapQtAppsHook
     desktop-file-utils
     imagemagick
-    javaIndexer # the resulting jar file is copied by our install script
   ] ++ lib.optional (stdenv.isDarwin) libicns
     ++ lib.optionals doCheck testBinPath;
-  buildInputs = [ boost pythonIndexer shared-mime-info ]
+  buildInputs = [ boost shared-mime-info ]
     ++ (with qt5; [ qtbase qtsvg ]) ++ (with llvmPackages; [ libclang llvm ]);
-  binPath = [ gcc jdk.jre maven which ];
+  binPath = [ gcc jre maven which ];
   testBinPath = binPath ++ [ coreutils ];
 
   cmakeFlags = [
     "-DBoost_USE_STATIC_LIBS=OFF"
     "-DBUILD_CXX_LANGUAGE_PACKAGE=ON"
-    "-DBUILD_JAVA_LANGUAGE_PACKAGE=ON"
-    "-DBUILD_PYTHON_LANGUAGE_PACKAGE=ON"
+    "-DBUILD_JAVA_LANGUAGE_PACKAGE=OFF"
+    "-DBUILD_PYTHON_LANGUAGE_PACKAGE=OFF"
   ] ++ lib.optional stdenv.isLinux
     "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}"
     ++ lib.optional stdenv.isDarwin
@@ -123,8 +92,6 @@ in stdenv.mkDerivation rec {
       --replace "\''${LLVM_BINARY_DIR}" '${lib.getLib llvmPackages.clang-unwrapped}'
 
     patchShebangs script
-    ln -sf ${installJavaIndexer} script/update_java_indexer.sh
-    ln -sf ${installPythonIndexer} script/download_python_indexer.sh
   '';
 
   # Directory layout for Linux:
@@ -238,10 +205,6 @@ in stdenv.mkDerivation rec {
   checkPhase = ''
     runHook preCheck
 
-    rm -rf ../bin/app/data/{python,java/lib}
-    ln -s $out/opt/sourcetrail/share/data/python ../bin/app/data/python
-    ln -s $out/opt/sourcetrail/share/data/java/lib ../bin/app/data/java/lib
-
     pushd test
     # shorten PATH to prevent build failures
     wrapQtApp ./Sourcetrail_test \
@@ -250,8 +213,6 @@ in stdenv.mkDerivation rec {
       --set MAVEN_OPTS "-Dmaven.repo.local=$TMPDIR/m2repo"
     ./Sourcetrail_test
     popd
-
-    rm ../bin/app/data/{python,java/lib}
 
     runHook postCheck
   '';
@@ -267,7 +228,7 @@ in stdenv.mkDerivation rec {
 
   meta = with lib; {
     homepage = "https://www.sourcetrail.com";
-    description = "A cross-platform source explorer for C/C++ and Java";
+    description = "A cross-platform source explorer for C/C++";
     platforms = platforms.all;
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ midchildan ];
