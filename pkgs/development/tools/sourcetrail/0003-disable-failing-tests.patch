@@ -1,7 +1,7 @@
 From de2388439f1ba4e6b8c1824c1c086c9ed4884a4c Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 19:01:33 -0400
-Subject: [PATCH] disable failing tests
+Subject: [PATCH 3/5] disable failing tests
 
 ---
  src/core/tests/FileSystemTestSuite.cpp | 2 ++

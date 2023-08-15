@@ -2,6 +2,8 @@
 , wrapQtAppsHook, qt5, boost, llvmPackages, gcc
 , coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
 , sqlite, tinyxml, fmt, project_options, pkgconfig, substituteAll
+# Darwin-only
+, CoreFoundation
 # For tests
 , gtest, catch2_3, trompeloeil
 }:
@@ -52,6 +54,11 @@ in stdenv.mkDerivation rec {
     })
     ./0002-use-correct-catch2-alias.patch
     ./0003-disable-failing-tests.patch
+    (substituteAll {
+      src = ./0004-Revert-build-Remove-mac-from-CMake.patch;
+      inherit setupFiles;
+    })
+    ./0005-fix-darwin-build.patch
   ];
 
   nativeBuildInputs = [
@@ -68,6 +75,7 @@ in stdenv.mkDerivation rec {
     catch2_3
     trompeloeil
   ] ++ lib.optional (stdenv.isDarwin) libicns
+    ++ lib.optional (stdenv.isDarwin) qt5.qtmacextras
     ++ lib.optionals doCheck testBinPath;
   buildInputs = [ boost shared-mime-info ]
     ++ (with qt5; [ qtbase qtsvg ]) ++ (with llvmPackages; [ libclang llvm ]);
@@ -225,6 +233,6 @@ in stdenv.mkDerivation rec {
     description = "A cross-platform source explorer for C/C++";
     platforms = platforms.all;
     license = licenses.gpl3Plus;
-    maintainers = with maintainers; [ midchildan ];
+    maintainers = with maintainers; [ cfeeley ];
   };
 }
