@@ -1,5 +1,5 @@
-{ lib, stdenv, fetchurl, fetchFromGitHub, callPackage, writeScript, fetchpatch, cmake
-, wrapQtAppsHook, qt5, boost, llvmPackages, gcc, jdk, jre, maven, pythonPackages
+{ lib, stdenv, fetchFromGitHub, cmake
+, wrapQtAppsHook, qt5, boost, llvmPackages, gcc
 , coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
 , sqlite, tinyxml, fmt, project_options, pkgconfig, substituteAll
 # For tests
@@ -46,27 +46,23 @@ in stdenv.mkDerivation rec {
   };
 
   patches = [
-    # ./disable-failing-tests.patch # FIXME: 5 test cases failing due to sandbox
-
     (substituteAll {
       src = ./0001-disable-conan-and-use-pkgconfig-for-dependencies.patch;
       inherit project_options;
     })
-    ./0001-use-correct-catch2-alias.patch
-    ./0001-disable-failing-tests.patch
+    ./0002-use-correct-catch2-alias.patch
+    ./0003-disable-failing-tests.patch
   ];
 
   nativeBuildInputs = [
     cmake
     pkgconfig
-    jdk
     wrapQtAppsHook
     desktop-file-utils
     imagemagick
     sqlite
     tinyxml
     fmt.dev
-    project_options
   ] ++ lib.optionals doCheck [
     gtest.dev
     catch2_3
@@ -75,16 +71,12 @@ in stdenv.mkDerivation rec {
     ++ lib.optionals doCheck testBinPath;
   buildInputs = [ boost shared-mime-info ]
     ++ (with qt5; [ qtbase qtsvg ]) ++ (with llvmPackages; [ libclang llvm ]);
-  binPath = [ gcc jre maven which ];
+  binPath = [ gcc which ];
   testBinPath = binPath ++ [ coreutils ];
 
   cmakeFlags = [
     "-DBoost_USE_STATIC_LIBS=OFF"
     "-DBUILD_CXX_LANGUAGE_PACKAGE=ON"
-    "-DBUILD_JAVA_LANGUAGE_PACKAGE=OFF"
-    "-DBUILD_PYTHON_LANGUAGE_PACKAGE=OFF"
-    "-DSOURCETRAIL_CMAKE_VERBOSE=ON"
-    "-DCMAKE_VERBOSE_MAKEFILE=ON"
   ] ++ lib.optionals doCheck [
     "-DENABLE_UNIT_TEST=ON"
     "-DENABLE_E2E_TEST=ON"
@@ -98,7 +90,7 @@ in stdenv.mkDerivation rec {
     inherit (ver) year month day;
   in ''
     # Upstream script obtains it's version from git:
-    # https://github.com/CoatiSoftware/Sourcetrail/blob/master/cmake/version.cmake
+    # https://github.com/OpenSourceSourceTrail/Sourcetrail/blob/master/cmake/version.cmake
     cat > cmake/version.cmake <<EOF
     set(GIT_BRANCH "")
     set(GIT_COMMIT_HASH "${version}")
@@ -109,8 +101,6 @@ in stdenv.mkDerivation rec {
     set(BUILD_TYPE "Release")
     set(VERSION_STRING "${year}.${month}.${day}")
     EOF
-
-    patchShebangs script
   '';
 
   # Directory layout for Linux:
