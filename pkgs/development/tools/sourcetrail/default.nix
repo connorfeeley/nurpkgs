@@ -1,7 +1,7 @@
 { lib, stdenv, fetchurl, fetchFromGitHub, callPackage, writeScript, fetchpatch, cmake
 , wrapQtAppsHook, qt5, boost, llvmPackages, gcc, jdk, jre, maven, pythonPackages
 , coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
-, sqlite, tinyxml, fmt, project_options, pkgconfig, gtest, catch2, trompeloeil
+, sqlite, tinyxml, fmt, project_options, pkgconfig, gtest, catch2, trompeloeil, substituteAll
 }:
 
 let
@@ -36,11 +36,13 @@ in stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  patches = let
-    url = commit:
-      "https://github.com/CoatiSoftware/Sourcetrail/commit/${commit}.patch";
-  in [
+  patches = [
     # ./disable-failing-tests.patch # FIXME: 5 test cases failing due to sandbox
+
+    (substituteAll {
+      src = ./0001-disable-conan-and-use-pkgconfig-for-dependencies.patch;
+      inherit project_options;
+    })
   ];
 
   nativeBuildInputs = [
@@ -97,25 +99,6 @@ in stdenv.mkDerivation rec {
     set(BUILD_TYPE "Release")
     set(VERSION_STRING "${major}.${minor}.${patch}")
     EOF
-
-    # Sourcetrail attempts to copy clang headers from the LLVM store path
-    substituteInPlace CMakeLists.txt \
-      --replace "\''${LLVM_BINARY_DIR}" '${lib.getLib llvmPackages.clang-unwrapped}' \
-      --replace 'URL "https://github.com/aminya/project_options/archive/refs/tags/v0.26.3.zip"' "SOURCE_DIR ${project_options}" \
-      --replace 'ENABLE_CONAN' 'DISABLE_CONAN' \
-      --replace 'find_package(SQLite3 CONFIG REQUIRED)' "pkg_check_modules(SQLITE REQUIRED sqlite3)" \
-      --replace '# Settings ---------------------------------------------------------------------' 'find_package(PkgConfig REQUIRED)' \
-      --replace 'find_package(TinyXML CONFIG REQUIRED)' "pkg_check_modules(TINYXML REQUIRED tinyxml)"
-
-    substituteInPlace CMakeLists.txt src/core/CMakeLists.txt src/lib_cxx/CMakeLists.txt src/external/CMakeLists.txt \
-      --replace 'TinyXML::TinyXML' ' ''${TINYXML_LIBRARIES}' \
-      --replace ' SQLite::SQLite3' ' ''${SQLITE_LIBRARIES}'
-
-    substituteInPlace src/external/CMakeLists.txt \
-      --replace ' SQLite::SQLite' ' ''${SQLITE_LIBRARIES}'
-
-    substituteInPlace src/indexer/CMakeLists.txt \
-      --replace 'Sourcetrail::lib_gui' 'Sourcetrail::lib_gui ''${SQLITE_LIBRARIES}'
 
     patchShebangs script
   '';
