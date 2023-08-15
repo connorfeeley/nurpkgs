@@ -50,9 +50,6 @@ in stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    gtest.dev
-    catch2_3
-    trompeloeil
     pkgconfig
     jdk
     wrapQtAppsHook
@@ -62,6 +59,10 @@ in stdenv.mkDerivation rec {
     tinyxml
     fmt.dev
     project_options
+  ] ++ lib.optionals doCheck [
+    gtest.dev
+    catch2_3
+    trompeloeil
   ] ++ lib.optional (stdenv.isDarwin) libicns
     ++ lib.optionals doCheck testBinPath;
   buildInputs = [ boost shared-mime-info ]
@@ -79,7 +80,7 @@ in stdenv.mkDerivation rec {
   ] ++ lib.optionals doCheck [
     "-DENABLE_UNIT_TEST=ON"
     "-DENABLE_E2E_TEST=ON"
-    "-DENABLE_INTEGRATION_TEST=OFF" # Broken by Nix
+    "-DENABLE_INTEGRATION_TEST=OFF" # Broken by sandbox
   ] ++ lib.optional stdenv.isLinux
     "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}"
     ++ lib.optional stdenv.isDarwin
