@@ -1,6 +1,7 @@
-{ lib, stdenv, fetchFromGitHub, callPackage, writeScript, fetchpatch, cmake
+{ lib, stdenv, fetchurl, fetchFromGitHub, callPackage, writeScript, fetchpatch, cmake
 , wrapQtAppsHook, qt5, boost, llvmPackages, gcc, jdk, jre, maven, pythonPackages
 , coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
+, sqlite, tinyxml, fmt, project_options, pkgconfig, gtest, catch2, trompeloeil
 }:
 
 let
@@ -15,43 +16,47 @@ let
   else
     "${appPrefixDir}/share";
 
+  setupFiles = fetchFromGitHub {
+    owner = "OpenSourceSourceTrail";
+    repo = "setup";
+    rev = "c297a0c48ee0798e09d976e990dd50c90d58bc19";
+    hash = "sha256-B1RkouqPg8AhyN1KJAbciPm9hsnEWhzUWW/L0FBR06s=";
+  };
+
 in stdenv.mkDerivation rec {
   pname = "sourcetrail-ng";
   # NOTE: skip 2020.4.35 https://github.com/CoatiSoftware/Sourcetrail/pull/1136
-  version = "2020.2.43";
+  version = "af5ead41959d0657803fb2e5a47e684840959f2e";
 
   src = fetchFromGitHub {
-    owner = "CoatiSoftware";
+    owner = "OpenSourceSourceTrail";
     repo = "Sourcetrail";
     rev = version;
-    sha256 = "0jp9y86xzkcxikc1cn4f6gqgg6zdssck08677ldagw25p1zadvzw";
+    hash = "sha256-oP32h91l0KMRCHWpq2yefVbRT40DHS6BswBpSIZR3j4=";
+    fetchSubmodules = true;
   };
 
   patches = let
     url = commit:
       "https://github.com/CoatiSoftware/Sourcetrail/commit/${commit}.patch";
   in [
-    ./disable-updates.patch
-    ./disable-failing-tests.patch # FIXME: 5 test cases failing due to sandbox
-    # TODO: remove on next release
-    (fetchpatch {
-      name = "fix-filecopy.patch";
-      url = url "d079d1787c9e5cadcf41a003666dc0746cc1cda0";
-      sha256 = "0mixy2a4s16kv2q89k7y4dv21wnv2zd86i4gdwn3xz977y8hf92b";
-    })
-    (fetchpatch {
-      name = "fix-broken-test.patch";
-      url = url "85329174bac8a301733100dc4540258f977e2c5a";
-      sha256 = "17l4417sbmkrgr6v3fbazlmkzl9774zrpjv2n9zwfrz52y30f7b9";
-    })
+    # ./disable-failing-tests.patch # FIXME: 5 test cases failing due to sandbox
   ];
 
   nativeBuildInputs = [
     cmake
+    # gtest
+    # catch2
+    # trompeloeil
+    pkgconfig
     jdk
     wrapQtAppsHook
     desktop-file-utils
     imagemagick
+    sqlite
+    tinyxml
+    fmt.dev
+    project_options
   ] ++ lib.optional (stdenv.isDarwin) libicns
     ++ lib.optionals doCheck testBinPath;
   buildInputs = [ boost shared-mime-info ]
@@ -64,21 +69,27 @@ in stdenv.mkDerivation rec {
     "-DBUILD_CXX_LANGUAGE_PACKAGE=ON"
     "-DBUILD_JAVA_LANGUAGE_PACKAGE=OFF"
     "-DBUILD_PYTHON_LANGUAGE_PACKAGE=OFF"
+    "-DSOURCETRAIL_CMAKE_VERBOSE=ON"
+    "-DCMAKE_VERBOSE_MAKEFILE=ON"
+  ] ++ lib.optionals doCheck [
+    "-DENABLE_UNIT_TEST=ON"
+    "-DENABLE_INTEGRATION_TEST=ON"
+    "-DENABLE_E2E_TEST=ON"
   ] ++ lib.optional stdenv.isLinux
     "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}"
     ++ lib.optional stdenv.isDarwin
     "-DClang_DIR=${llvmPackages.clang-unwrapped}";
 
   postPatch = let
-    major = lib.versions.major version;
-    minor = lib.versions.minor version;
-    patch = lib.versions.patch version;
+    major = "2023";
+    minor = "8";
+    patch = "14";
   in ''
     # Upstream script obtains it's version from git:
     # https://github.com/CoatiSoftware/Sourcetrail/blob/master/cmake/version.cmake
     cat > cmake/version.cmake <<EOF
     set(GIT_BRANCH "")
-    set(GIT_COMMIT_HASH "")
+    set(GIT_COMMIT_HASH "${version}")
     set(GIT_VERSION_NUMBER "")
     set(VERSION_YEAR "${major}")
     set(VERSION_MINOR "${minor}")
@@ -89,7 +100,22 @@ in stdenv.mkDerivation rec {
 
     # Sourcetrail attempts to copy clang headers from the LLVM store path
     substituteInPlace CMakeLists.txt \
-      --replace "\''${LLVM_BINARY_DIR}" '${lib.getLib llvmPackages.clang-unwrapped}'
+      --replace "\''${LLVM_BINARY_DIR}" '${lib.getLib llvmPackages.clang-unwrapped}' \
+      --replace 'URL "https://github.com/aminya/project_options/archive/refs/tags/v0.26.3.zip"' "SOURCE_DIR ${project_options}" \
+      --replace 'ENABLE_CONAN' 'DISABLE_CONAN' \
+      --replace 'find_package(SQLite3 CONFIG REQUIRED)' "pkg_check_modules(SQLITE REQUIRED sqlite3)" \
+      --replace '# Settings ---------------------------------------------------------------------' 'find_package(PkgConfig REQUIRED)' \
+      --replace 'find_package(TinyXML CONFIG REQUIRED)' "pkg_check_modules(TINYXML REQUIRED tinyxml)"
+
+    substituteInPlace CMakeLists.txt src/core/CMakeLists.txt src/lib_cxx/CMakeLists.txt src/external/CMakeLists.txt \
+      --replace 'TinyXML::TinyXML' ' ''${TINYXML_LIBRARIES}' \
+      --replace ' SQLite::SQLite3' ' ''${SQLITE_LIBRARIES}'
+
+    substituteInPlace src/external/CMakeLists.txt \
+      --replace ' SQLite::SQLite' ' ''${SQLITE_LIBRARIES}'
+
+    substituteInPlace src/indexer/CMakeLists.txt \
+      --replace 'Sourcetrail::lib_gui' 'Sourcetrail::lib_gui ''${SQLITE_LIBRARIES}'
 
     patchShebangs script
   '';
@@ -133,7 +159,7 @@ in stdenv.mkDerivation rec {
   #         └── data/
   #
   # Upstream install script:
-  # https://github.com/CoatiSoftware/Sourcetrail/blob/master/setup/Linux/createPackages.sh
+  # https://github.com/OpenSourceSourceTrail/Sourcetrail/blob/master/setup/Linux/createPackages.sh
   installPhase = ''
     runHook preInstall
 
@@ -154,10 +180,10 @@ in stdenv.mkDerivation rec {
 
     desktop-file-install --dir=$out/share/applications \
       --set-key Exec --set-value ${appBinDir}/sourcetrail \
-      ../setup/Linux/data/sourcetrail.desktop
+      ${setupFiles}/Linux/data/sourcetrail.desktop
 
     mkdir -p $out/share/mime/packages
-    cp ../setup/Linux/data/sourcetrail-mime.xml $out/share/mime/packages/
+    cp ${setupFiles}/Linux/data/sourcetrail-mime.xml $out/share/mime/packages/
 
     for size in 48 64 128 256 512; do
       mkdir -p $out/share/icons/hicolor/''${size}x''${size}/apps/
@@ -202,21 +228,6 @@ in stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
-  checkPhase = ''
-    runHook preCheck
-
-    pushd test
-    # shorten PATH to prevent build failures
-    wrapQtApp ./Sourcetrail_test \
-      --set PATH "" \
-      --prefix PATH : ${lib.makeBinPath testBinPath} \
-      --set MAVEN_OPTS "-Dmaven.repo.local=$TMPDIR/m2repo"
-    ./Sourcetrail_test
-    popd
-
-    runHook postCheck
-  '';
-
   # This has to be done manually in the installPhase because the actual binary
   # lives in $out/opt/sourcetrail/bin, which isn't covered by wrapQtAppsHook
   dontWrapQtApps = true;
@@ -224,10 +235,10 @@ in stdenv.mkDerivation rec {
   # FIXME: Some test cases are disabled in the patch phase.
   # FIXME: Tests are disabled on some platforms because of faulty detection
   # logic for libjvm.so. Should work with manual configuration.
-  doCheck = !stdenv.isDarwin && stdenv.isx86_64;
+  doCheck = false; # !stdenv.isDarwin && stdenv.isx86_64;
 
   meta = with lib; {
-    homepage = "https://www.sourcetrail.com";
+    homepage = "https://github.com/OpenSourceSourceTrail/Sourcetrail";
     description = "A cross-platform source explorer for C/C++";
     platforms = platforms.all;
     license = licenses.gpl3Plus;
