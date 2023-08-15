@@ -25,9 +25,17 @@ let
     hash = "sha256-B1RkouqPg8AhyN1KJAbciPm9hsnEWhzUWW/L0FBR06s=";
   };
 
+  ver = {
+    version = "af5ead41959d0657803fb2e5a47e684840959f2e";
+    # Fields must not have leading a zero
+    year = "2023";
+    month = "8";
+    day = "14";
+  };
+
 in stdenv.mkDerivation rec {
   pname = "sourcetrail-ng";
-  version = "af5ead41959d0657803fb2e5a47e684840959f2e";
+  inherit (ver) version;
 
   src = fetchFromGitHub {
     owner = "OpenSourceSourceTrail";
@@ -87,9 +95,7 @@ in stdenv.mkDerivation rec {
     "-DClang_DIR=${llvmPackages.clang-unwrapped}";
 
   postPatch = let
-    major = "2023";
-    minor = "8";
-    patch = "14";
+    inherit (ver) year month day;
   in ''
     # Upstream script obtains it's version from git:
     # https://github.com/CoatiSoftware/Sourcetrail/blob/master/cmake/version.cmake
@@ -97,11 +103,11 @@ in stdenv.mkDerivation rec {
     set(GIT_BRANCH "")
     set(GIT_COMMIT_HASH "${version}")
     set(GIT_VERSION_NUMBER "")
-    set(VERSION_YEAR "${major}")
-    set(VERSION_MINOR "${minor}")
-    set(VERSION_COMMIT "${patch}")
+    set(VERSION_YEAR "${year}")
+    set(VERSION_MINOR "${month}")
+    set(VERSION_COMMIT "${day}")
     set(BUILD_TYPE "Release")
-    set(VERSION_STRING "${major}.${minor}.${patch}")
+    set(VERSION_STRING "${year}.${month}.${day}")
     EOF
 
     patchShebangs script
