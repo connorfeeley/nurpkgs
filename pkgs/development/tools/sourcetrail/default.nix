@@ -1,24 +1,45 @@
-{ lib, stdenv, fetchFromGitHub, cmake
-, wrapQtAppsHook, qt5, boost, llvmPackages, gcc
-, coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
-, sqlite, tinyxml, fmt, project_options, pkgconfig, substituteAll
-# Darwin-only
+{ lib
+, stdenv
+, fetchFromGitHub
+, cmake
+, wrapQtAppsHook
+, qt5
+, boost
+, llvmPackages
+, gcc
+, coreutils
+, which
+, desktop-file-utils
+, shared-mime-info
+, imagemagick
+, libicns
+, sqlite
+, tinyxml
+, fmt
+, project_options
+, pkgconfig
+, substituteAll
+  # Darwin-only
 , CoreFoundation
-# For tests
-, gtest, catch2_3, trompeloeil
+  # For tests
+, gtest
+, catch2_3
+, trompeloeil
 }:
 
 let
-  appPrefixDir = if stdenv.isDarwin then
-    "$out/Applications/Sourcetrail.app/Contents"
-  else
-    "$out/opt/sourcetrail";
+  appPrefixDir =
+    if stdenv.isDarwin then
+      "$out/Applications/Sourcetrail.app/Contents"
+    else
+      "$out/opt/sourcetrail";
   appBinDir =
     if stdenv.isDarwin then "${appPrefixDir}/MacOS" else "${appPrefixDir}/bin";
-  appResourceDir = if stdenv.isDarwin then
-    "${appPrefixDir}/Resources"
-  else
-    "${appPrefixDir}/share";
+  appResourceDir =
+    if stdenv.isDarwin then
+      "${appPrefixDir}/Resources"
+    else
+      "${appPrefixDir}/share";
 
   setupFiles = fetchFromGitHub {
     owner = "OpenSourceSourceTrail";
@@ -35,7 +56,8 @@ let
     day = "14";
   };
 
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
   pname = "sourcetrail-ng";
   inherit (ver) version;
 
@@ -76,8 +98,8 @@ in stdenv.mkDerivation rec {
     catch2_3
     trompeloeil
   ] ++ lib.optional (stdenv.isDarwin) libicns
-    ++ lib.optional (stdenv.isDarwin) qt5.qtmacextras
-    ++ lib.optionals doCheck testBinPath;
+  ++ lib.optional (stdenv.isDarwin) qt5.qtmacextras
+  ++ lib.optionals doCheck testBinPath;
   buildInputs = [ boost shared-mime-info ]
     ++ (with qt5; [ qtbase qtsvg ]) ++ (with llvmPackages; [ libclang llvm ]);
   binPath = [ gcc which ];
@@ -92,25 +114,27 @@ in stdenv.mkDerivation rec {
     "-DENABLE_INTEGRATION_TEST=OFF" # Broken by sandbox
   ] ++ lib.optional stdenv.isLinux
     "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}"
-    ++ lib.optional stdenv.isDarwin
+  ++ lib.optional stdenv.isDarwin
     "-DClang_DIR=${llvmPackages.clang-unwrapped}";
 
-  postPatch = let
-    inherit (ver) year month day;
-  in ''
-    # Upstream script obtains it's version from git:
-    # https://github.com/OpenSourceSourceTrail/Sourcetrail/blob/master/cmake/version.cmake
-    cat > cmake/version.cmake <<EOF
-    set(GIT_BRANCH "")
-    set(GIT_COMMIT_HASH "${version}")
-    set(GIT_VERSION_NUMBER "")
-    set(VERSION_YEAR "${year}")
-    set(VERSION_MINOR "${month}")
-    set(VERSION_COMMIT "${day}")
-    set(BUILD_TYPE "Release")
-    set(VERSION_STRING "${year}.${month}.${day}")
-    EOF
-  '';
+  postPatch =
+    let
+      inherit (ver) year month day;
+    in
+    ''
+      # Upstream script obtains it's version from git:
+      # https://github.com/OpenSourceSourceTrail/Sourcetrail/blob/master/cmake/version.cmake
+      cat > cmake/version.cmake <<EOF
+      set(GIT_BRANCH "")
+      set(GIT_COMMIT_HASH "${version}")
+      set(GIT_VERSION_NUMBER "")
+      set(VERSION_YEAR "${year}")
+      set(VERSION_MINOR "${month}")
+      set(VERSION_COMMIT "${day}")
+      set(BUILD_TYPE "Release")
+      set(VERSION_STRING "${year}.${month}.${day}")
+      EOF
+    '';
 
   # Directory layout for Linux:
   #
@@ -225,8 +249,6 @@ in stdenv.mkDerivation rec {
   dontWrapQtApps = true;
 
   # FIXME: Some test cases are disabled in the patch phase.
-  # FIXME: Tests are disabled on some platforms because of faulty detection
-  # logic for libjvm.so. Should work with manual configuration.
   doCheck = true;
 
   meta = with lib; {
