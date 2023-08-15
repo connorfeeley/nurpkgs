@@ -1,0 +1,116 @@
+From 4bc68b996595151b894d9775c633f35d42f1b96a Mon Sep 17 00:00:00 2001
+From: Connor Feeley <git@cfeeley.org>
+Date: Tue, 15 Aug 2023 18:05:58 -0400
+Subject: [PATCH] disable conan and use pkgconfig for dependencies
+
+---
+ CMakeLists.txt              | 15 ++++++++-------
+ src/core/CMakeLists.txt     |  2 +-
+ src/external/CMakeLists.txt |  2 +-
+ src/indexer/CMakeLists.txt  |  3 ++-
+ src/lib_cxx/CMakeLists.txt  |  2 +-
+ 5 files changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4808224c..0ab63c41 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,7 +53,7 @@ include(FetchContent)
+ FetchContent_Declare(
+   _project_options
+   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+-  URL "https://github.com/aminya/project_options/archive/refs/tags/v0.26.3.zip")
++  SOURCE_DIR @project_options@)
+ FetchContent_MakeAvailable(_project_options)
+ include(${_project_options_SOURCE_DIR}/Index.cmake)
+ # Variables --------------------------------------------------------------------
+@@ -95,7 +95,7 @@ if(ENABLE_COVERAGE)
+ endif()
+ 
+ project_options(
+-  ENABLE_CONAN
++  DISABLE_CONAN
+   # CONAN_OPTIONS    # Extra options to pass to conan
+   # MSVC_WARNINGS    # Override the defaults for the MSVC warnings
+   # CLANG_WARNINGS   # Override the defaults for the CLANG warnings
+@@ -127,9 +127,10 @@ if(UNIX AND NOT APPLE)
+ endif()
+ 
+ # Settings ---------------------------------------------------------------------
+-find_package(SQLite3 CONFIG REQUIRED)
+-find_package(TinyXML CONFIG REQUIRED)
+-find_package(fmt     CONFIG REQUIRED)
++find_package(PkgConfig    REQUIRED)
++pkg_check_modules(SQLITE  REQUIRED sqlite3)
++pkg_check_modules(TINYXML REQUIRED tinyxml)
++find_package(fmt   CONFIG REQUIRED)
+ # Boost ------------------------------------------------------------------------
+ set(Boost_USE_MULTITHREAD ON)
+ set(Boost_USE_STATIC_LIBS ON CACHE BOOL "Set to ON to force the use of the static libraries.")
+@@ -224,8 +225,8 @@ target_link_libraries(
+     Boost::filesystem
+     Boost::program_options
+     Boost::system
+-    SQLite::SQLite3
+-    TinyXML::TinyXML
++    ${SQLITE_LIBRARIES}
++    ${TINYXML_LIBRARIES}
+     fmt::fmt
+     $<$<PLATFORM_ID:Windows>:bcrypt>)
+ 
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index a07332b6..b8ab8e9c 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -53,7 +53,7 @@ target_link_libraries(
+   PRIVATE
+     Boost::filesystem
+     Sourcetrail::lib_utility
+-    TinyXML::TinyXML
++    ${TINYXML_LIBRARIES}
+     fmt::fmt)
+ 
+ # $<$<PLATFORM_ID:Windows>:bcrypt>
+diff --git a/src/external/CMakeLists.txt b/src/external/CMakeLists.txt
+index b5da4dd1..f986c887 100755
+--- a/src/external/CMakeLists.txt
++++ b/src/external/CMakeLists.txt
+@@ -4,7 +4,7 @@ add_library(CppSQLite::CppSQLite3 ALIAS CppSQLite3)
+ target_link_libraries(
+   CppSQLite3
+   PUBLIC
+-    SQLite::SQLite)
++    ${SQLITE_LIBRARIES})
+ target_include_directories(
+   CppSQLite3
+   SYSTEM PUBLIC
+diff --git a/src/indexer/CMakeLists.txt b/src/indexer/CMakeLists.txt
+index 3a5863c2..d1c80097 100755
+--- a/src/indexer/CMakeLists.txt
++++ b/src/indexer/CMakeLists.txt
+@@ -44,7 +44,8 @@ target_link_libraries(
+     Qt5::Core
+     Sourcetrail::core
+     Sourcetrail::lib
+-    Sourcetrail::lib_gui)
++    Sourcetrail::lib_gui
++    ${SQLITE_LIBRARIES})
+ 
+ if(APPLE)
+   find_library(CORE_FOUNDATION CoreFoundation)
+diff --git a/src/lib_cxx/CMakeLists.txt b/src/lib_cxx/CMakeLists.txt
+index 75305bb4..1158f9a3 100755
+--- a/src/lib_cxx/CMakeLists.txt
++++ b/src/lib_cxx/CMakeLists.txt
+@@ -144,7 +144,7 @@ target_link_libraries(
+     Sourcetrail::scheduling
+     ${REQ_LLVM_LIBS}
+     ${CLANG_LIBRARIES}
+-    TinyXML::TinyXML
++    ${TINYXML_LIBRARIES}
+     Qt5::Core)
+ 
+ if(WIN32)
+-- 
+2.40.1
+
