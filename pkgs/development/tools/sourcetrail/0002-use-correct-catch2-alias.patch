@@ -1,0 +1,119 @@
+From d879728719d0a33d0f50de4b4f9cae00a4540dde Mon Sep 17 00:00:00 2001
+From: Connor Feeley <git@cfeeley.org>
+Date: Tue, 15 Aug 2023 18:34:44 -0400
+Subject: [PATCH] use correct catch2 alias
+
+---
+ src/core/tests/CMakeLists.txt              | 2 +-
+ src/lib_gui/tests/CMakeLists.txt           | 2 +-
+ src/scheduling/tests/CMakeLists.txt        | 2 +-
+ src/test/CMakeLists.txt                    | 8 ++++----
+ tests/integration/lib/CMakeLists.txt       | 2 +-
+ tests/integration/messaging/CMakeLists.txt | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/src/core/tests/CMakeLists.txt b/src/core/tests/CMakeLists.txt
+index 45c2c7ef..efd095af 100644
+--- a/src/core/tests/CMakeLists.txt
++++ b/src/core/tests/CMakeLists.txt
+@@ -14,7 +14,7 @@ foreach(test_name IN LISTS test_lib_names)
+   target_link_libraries(
+     ${test_name}
+     PUBLIC
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       Sourcetrail::core)
+ 
+   set_target_properties(
+diff --git a/src/lib_gui/tests/CMakeLists.txt b/src/lib_gui/tests/CMakeLists.txt
+index b6d1c8a1..e9253dc8 100644
+--- a/src/lib_gui/tests/CMakeLists.txt
++++ b/src/lib_gui/tests/CMakeLists.txt
+@@ -13,7 +13,7 @@ foreach(test_name IN LISTS test_lib_gui_names)
+     ${test_name}
+     PUBLIC
+       testHelper
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       trompeloeil::trompeloeil
+       Sourcetrail::lib
+       Sourcetrail::lib_gui
+diff --git a/src/scheduling/tests/CMakeLists.txt b/src/scheduling/tests/CMakeLists.txt
+index 2d3a6fe1..464bff47 100644
+--- a/src/scheduling/tests/CMakeLists.txt
++++ b/src/scheduling/tests/CMakeLists.txt
+@@ -9,7 +9,7 @@ foreach(test_name IN LISTS test_lib_names)
+   target_link_libraries(
+     ${test_name}
+     PUBLIC
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       Sourcetrail::scheduling)
+ 
+   set_target_properties(
+diff --git a/src/test/CMakeLists.txt b/src/test/CMakeLists.txt
+index 19213070..8d0359af 100755
+--- a/src/test/CMakeLists.txt
++++ b/src/test/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ # ${CMAKE_SOURCE_DIR}/src/test/CMakeLists.txt
+ add_library(catch_main OBJECT test_main.cpp)
+-target_link_libraries(catch_main PUBLIC catch2::catch2 Sourcetrail::core)
++target_link_libraries(catch_main PUBLIC Catch2::Catch2WithMain Sourcetrail::core)
+ target_include_directories(
+   catch_main
+   PUBLIC
+@@ -53,7 +53,7 @@ foreach(test_name IN LISTS test_lib_names)
+     ${test_name}
+     PUBLIC
+       testHelper
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       Sourcetrail::lib
+       Sourcetrail::lib_gui
+       $<$<BOOL:${BUILD_CXX_LANGUAGE_PACKAGE}>:Sourcetrail::lib_cxx>)
+@@ -90,7 +90,7 @@ foreach(test_name IN LISTS test_core_names)
+     ${test_name}
+     PUBLIC
+       testHelper
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       Sourcetrail::core)
+ 
+   # automatically discover ${test_name} that are defined in catch based test files you can modify the unittests. Set TEST_PREFIX
+@@ -104,4 +104,4 @@ foreach(test_name IN LISTS test_core_names)
+     OUTPUT_PREFIX "unittests."
+     OUTPUT_SUFFIX .xml
+     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
+-endforeach()
+\ No newline at end of file
++endforeach()
+diff --git a/tests/integration/lib/CMakeLists.txt b/tests/integration/lib/CMakeLists.txt
+index 33d961f2..e85ce662 100644
+--- a/tests/integration/lib/CMakeLists.txt
++++ b/tests/integration/lib/CMakeLists.txt
+@@ -14,7 +14,7 @@ foreach(test_name IN LISTS test_lib_names)
+   target_link_libraries(
+     ${test_name}
+     PUBLIC
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       Qt5::Core
+       Sourcetrail::messaging
+       $<$<BOOL:${BUILD_CXX_LANGUAGE_PACKAGE}>:Sourcetrail::lib_cxx>)
+diff --git a/tests/integration/messaging/CMakeLists.txt b/tests/integration/messaging/CMakeLists.txt
+index 7ec1b9a9..741c292a 100644
+--- a/tests/integration/messaging/CMakeLists.txt
++++ b/tests/integration/messaging/CMakeLists.txt
+@@ -10,7 +10,7 @@ foreach(test_name IN LISTS test_lib_names)
+   target_link_libraries(
+     ${test_name}
+     PUBLIC
+-      catch2::catch2
++      Catch2::Catch2WithMain
+       Sourcetrail::messaging)
+ 
+   set_target_properties(
+-- 
+2.40.1
+

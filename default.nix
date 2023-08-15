@@ -20,6 +20,7 @@ let
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
       tests = callPackage ./pkgs/test { };
+
       project_options = callPackage ./pkgs/development/libraries/project_options { };
       sourcetrail-ng =
         let
@@ -27,8 +28,6 @@ let
         in
         pkgs.libsForQt5.callPackage ./pkgs/development/tools/sourcetrail {
           stdenv = if pkgs.stdenv.cc.isClang then llvmPackages.stdenv else pkgs.stdenv;
-          jdk = pkgs.jdk8;
-          pythonPackages = pkgs.python3Packages;
           inherit llvmPackages project_options;
         };
     in
