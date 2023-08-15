@@ -19,6 +19,7 @@ let
   top-level = pkgs.lib.makeScope pkgs.newScope (self:
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
+
       tests = callPackage ./pkgs/test { };
 
       project_options = callPackage ./pkgs/development/libraries/project_options { };
@@ -26,7 +27,7 @@ let
         let
           llvmPackages = pkgs.llvmPackages_15;
         in
-        pkgs.libsForQt5.callPackage ./pkgs/development/tools/sourcetrail {
+        pkgs.libsForQt5.callPackage ./pkgs/development/tools/sourcetrail-ng {
           stdenv = if pkgs.stdenv.cc.isClang then llvmPackages.stdenv else pkgs.stdenv;
           inherit llvmPackages project_options;
           inherit (pkgs.darwin.apple_sdk_11_0.frameworks) CoreFoundation;
@@ -59,7 +60,7 @@ let
     # The `lib`, `modules`, and `overlay` names are special
     # lib = import ./lib { inherit pkgs; }; # functions
     # modules = import ./modules; # NixOS modules
-    # overlays = import ./overlays; # nixpkgs overlays
+    overlays = import ./overlays; # nixpkgs overlays
   };
 in
 top-level // special

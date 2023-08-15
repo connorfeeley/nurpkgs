@@ -253,7 +253,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     homepage = "https://github.com/OpenSourceSourceTrail/Sourcetrail";
-    description = "A cross-platform source explorer for C/C++";
+    description = "A cross-platform source explorer for C/C++ (maintained fork)";
     platforms = platforms.all;
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ cfeeley ];
