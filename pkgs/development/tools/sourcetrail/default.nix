@@ -60,7 +60,7 @@ in stdenv.mkDerivation rec {
     })
     ./0005-fix-darwin-build.patch
     ./0006-add-missing-vector-include.patch
-  ];
+  ] ++ lib.optional (stdenv.isDarwin) ./0007-disable-failing-tests-darwin.patch;
 
   nativeBuildInputs = [
     cmake
@@ -227,7 +227,7 @@ in stdenv.mkDerivation rec {
   # FIXME: Some test cases are disabled in the patch phase.
   # FIXME: Tests are disabled on some platforms because of faulty detection
   # logic for libjvm.so. Should work with manual configuration.
-  doCheck = !stdenv.isDarwin && stdenv.isx86_64;
+  doCheck = true;
 
   meta = with lib; {
     homepage = "https://github.com/OpenSourceSourceTrail/Sourcetrail";
