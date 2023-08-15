@@ -1,7 +1,9 @@
 { lib, stdenv, fetchurl, fetchFromGitHub, callPackage, writeScript, fetchpatch, cmake
 , wrapQtAppsHook, qt5, boost, llvmPackages, gcc, jdk, jre, maven, pythonPackages
 , coreutils, which, desktop-file-utils, shared-mime-info, imagemagick, libicns
-, sqlite, tinyxml, fmt, project_options, pkgconfig, gtest, catch2, trompeloeil, substituteAll
+, sqlite, tinyxml, fmt, project_options, pkgconfig, substituteAll
+# For tests
+, gtest, catch2_3, trompeloeil
 }:
 
 let
@@ -25,7 +27,6 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "sourcetrail-ng";
-  # NOTE: skip 2020.4.35 https://github.com/CoatiSoftware/Sourcetrail/pull/1136
   version = "af5ead41959d0657803fb2e5a47e684840959f2e";
 
   src = fetchFromGitHub {
@@ -43,13 +44,15 @@ in stdenv.mkDerivation rec {
       src = ./0001-disable-conan-and-use-pkgconfig-for-dependencies.patch;
       inherit project_options;
     })
+    ./0001-use-correct-catch2-alias.patch
+    ./0001-disable-failing-tests.patch
   ];
 
   nativeBuildInputs = [
     cmake
-    # gtest
-    # catch2
-    # trompeloeil
+    gtest.dev
+    catch2_3
+    trompeloeil
     pkgconfig
     jdk
     wrapQtAppsHook
@@ -75,8 +78,8 @@ in stdenv.mkDerivation rec {
     "-DCMAKE_VERBOSE_MAKEFILE=ON"
   ] ++ lib.optionals doCheck [
     "-DENABLE_UNIT_TEST=ON"
-    "-DENABLE_INTEGRATION_TEST=ON"
     "-DENABLE_E2E_TEST=ON"
+    "-DENABLE_INTEGRATION_TEST=OFF" # Broken by Nix
   ] ++ lib.optional stdenv.isLinux
     "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}"
     ++ lib.optional stdenv.isDarwin
@@ -218,7 +221,7 @@ in stdenv.mkDerivation rec {
   # FIXME: Some test cases are disabled in the patch phase.
   # FIXME: Tests are disabled on some platforms because of faulty detection
   # logic for libjvm.so. Should work with manual configuration.
-  doCheck = false; # !stdenv.isDarwin && stdenv.isx86_64;
+  doCheck = !stdenv.isDarwin && stdenv.isx86_64;
 
   meta = with lib; {
     homepage = "https://github.com/OpenSourceSourceTrail/Sourcetrail";
