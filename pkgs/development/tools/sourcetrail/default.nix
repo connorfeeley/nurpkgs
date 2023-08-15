@@ -59,6 +59,7 @@ in stdenv.mkDerivation rec {
       inherit setupFiles;
     })
     ./0005-fix-darwin-build.patch
+    ./0006-add-missing-vector-include.patch
   ];
 
   nativeBuildInputs = [

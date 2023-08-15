@@ -1,0 +1,24 @@
+From e70e9fc87d1cdd5a3c30b61b92a404f9f76e6c53 Mon Sep 17 00:00:00 2001
+From: Connor Feeley <git@cfeeley.org>
+Date: Tue, 15 Aug 2023 20:34:27 -0400
+Subject: [PATCH] add missing vector include
+
+---
+ src/lib/data/storage/IntermediateStorage.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/lib/data/storage/IntermediateStorage.h b/src/lib/data/storage/IntermediateStorage.h
+index b563cbc9..8a26c376 100755
+--- a/src/lib/data/storage/IntermediateStorage.h
++++ b/src/lib/data/storage/IntermediateStorage.h
+@@ -3,6 +3,7 @@
+ #include <map>
+ #include <memory>
+ #include <set>
++#include <vector>
+ // internal
+ #include "Storage.h"
+ 
+-- 
+2.40.1
+
