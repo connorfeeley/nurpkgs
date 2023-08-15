@@ -20,15 +20,16 @@ let
     let inherit (self) callPackage;
       cpprestsdk = callPackage ./pkgs/development/libraries/cpprestsdk { inherit (pkgs.darwin.apple_sdk.frameworks) Security; };
       tests = callPackage ./pkgs/test { };
+      project_options = callPackage ./pkgs/development/libraries/project_options { };
       sourcetrail-ng =
         let
-          llvmPackages = pkgs.llvmPackages_10;
+          llvmPackages = pkgs.llvmPackages_15;
         in
         pkgs.libsForQt5.callPackage ./pkgs/development/tools/sourcetrail {
           stdenv = if pkgs.stdenv.cc.isClang then llvmPackages.stdenv else pkgs.stdenv;
           jdk = pkgs.jdk8;
           pythonPackages = pkgs.python3Packages;
-          inherit llvmPackages;
+          inherit llvmPackages project_options;
         };
     in
     {
@@ -41,6 +42,7 @@ let
       mdio-tools = callPackage ./pkgs/os-specific/linux/mdio-tools { };
       mft = callPackage ./pkgs/applications/misc/mft { kernel = pkgs.linux; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
+      inherit project_options;
       pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
       rescript = pkgs.ocamlPackages.callPackage ./pkgs/development/compilers/rescript { };
