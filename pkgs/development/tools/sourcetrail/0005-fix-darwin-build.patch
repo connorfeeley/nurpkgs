@@ -1,0 +1,71 @@
+From dc2e612aed9508ef313a9762c5e50ffbee434b71 Mon Sep 17 00:00:00 2001
+From: Connor Feeley <git@cfeeley.org>
+Date: Tue, 15 Aug 2023 19:22:45 -0400
+Subject: [PATCH 5/5] fix darwin build
+
+---
+ src/app/CMakeLists.txt                        | 15 ++++++++-------
+ src/lib_gui/qt/window/QtKeyboardShortcuts.cpp |  2 +-
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
+index c9448383..cad35050 100755
+--- a/src/app/CMakeLists.txt
++++ b/src/app/CMakeLists.txt
+@@ -1,6 +1,11 @@
+ #${CMAKE_SOURCE_DIR}/src/app/CMakeLists.txt
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/app/")
+ 
++# add platform specific libraries
++if(APPLE)
++  find_library(CORE_FOUNDATION CoreFoundation)
++endif ()
++
+ if(WIN32)
+   file(WRITE ${CMAKE_BINARY_DIR}/Sourcetrail.rc
+     "// Icon with lowest ID value placed first to ensure application icon\n"
+@@ -49,7 +54,8 @@ target_link_libraries(
+     $<$<BOOL:${BUILD_CXX_LANGUAGE_PACKAGE}>:Sourcetrail::lib_cxx>
+     Boost::locale
+     Qt5::Widgets
+-    Qt5::Network)
++    Qt5::Network
++    $<$<BOOL:${APPLE}>:${CORE_FOUNDATION}>)
+ 
+ target_include_directories(
+   Sourcetrail
+@@ -68,11 +74,6 @@ set_target_properties(
+   Sourcetrail
+   PROPERTIES
+     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/app/")
+-    # add platform specific libraries
+-if(APPLE)
+-  find_library(CORE_FOUNDATION CoreFoundation)
+-  target_link_libraries(Sourcetrail ${CORE_FOUNDATION})
+-endif ()
+ 
+ add_dependencies(Sourcetrail Sourcetrail_indexer)
+ 
+@@ -84,4 +85,4 @@ file(COPY ${CMAKE_SOURCE_DIR}/bin/app/data/gui/icon/sourcetrail.ico
+ 
+ if(WIN32)
+   copy_qt_binaries("${CMAKE_BINARY_DIR}/app/" TRUE)
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/src/lib_gui/qt/window/QtKeyboardShortcuts.cpp b/src/lib_gui/qt/window/QtKeyboardShortcuts.cpp
+index d68bb823..843c4ef4 100755
+--- a/src/lib_gui/qt/window/QtKeyboardShortcuts.cpp
++++ b/src/lib_gui/qt/window/QtKeyboardShortcuts.cpp
+@@ -75,7 +75,7 @@ QtKeyboardShortcuts::Shortcut::Shortcut(const QString& name, const QString& shor
+ 
+ QtKeyboardShortcuts::Shortcut QtKeyboardShortcuts::Shortcut::defaultOrMac(const QString& name,
+                                                                           const QString& defaultShortcut,
+-                                                                          const QString& /*macShortcut*/) {
++                                                                          const QString& macShortcut) {
+ #if defined(Q_OS_MAC)
+   return {name, macShortcut};
+ #else
+-- 
+2.40.1
+

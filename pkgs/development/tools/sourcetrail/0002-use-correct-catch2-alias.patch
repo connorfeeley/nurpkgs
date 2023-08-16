@@ -1,7 +1,7 @@
 From d879728719d0a33d0f50de4b4f9cae00a4540dde Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 18:34:44 -0400
-Subject: [PATCH] use correct catch2 alias
+Subject: [PATCH 2/5] use correct catch2 alias
 
 ---
  src/core/tests/CMakeLists.txt              | 2 +-

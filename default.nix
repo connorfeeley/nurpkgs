@@ -29,6 +29,7 @@ let
         pkgs.libsForQt5.callPackage ./pkgs/development/tools/sourcetrail {
           stdenv = if pkgs.stdenv.cc.isClang then llvmPackages.stdenv else pkgs.stdenv;
           inherit llvmPackages project_options;
+          inherit (pkgs.darwin.apple_sdk_11_0.frameworks) CoreFoundation;
         };
     in
     {
