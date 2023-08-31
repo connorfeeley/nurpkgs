@@ -63,6 +63,7 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out
     cp -r $TMPDIR/{etc,usr/{bin,lib64,share}} $out
+    substituteInPlace $(find $out/etc/bash_completion.d -type f) --replace "/etc/bash_completion.d" "$out/etc/bash_completion.d"
     substituteInPlace $out/etc/init.d/mst --replace "mbindir=/usr/bin" "mbindir=$out/bin"
     substituteInPlace $out/etc/init.d/mst --replace "mlibdir=/usr/lib64" "mlibdir=$out/lib64"
     unlink $out/bin/mst
