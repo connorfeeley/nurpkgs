@@ -39,7 +39,7 @@ let
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       github-copilot-cli = callPackage ./pkgs/applications/misc/github-copilot-cli/default.nix { };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
-      linux-xlnx = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
+      # linux-xlnx = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
       mdio-tools = callPackage ./pkgs/os-specific/linux/mdio-tools { };
       mft = callPackage ./pkgs/applications/misc/mft { kernel = pkgs.linux; };
