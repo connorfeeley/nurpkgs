@@ -47,7 +47,7 @@ let
       inherit project_options;
       pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
       rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
-      rescript = pkgs.ocamlPackages.callPackage ./pkgs/development/compilers/rescript { };
+      rescript = pkgs.ocaml-ng.ocamlPackages_4_14.callPackage ./pkgs/development/compilers/rescript { };
       inherit sourcetrail-ng;
       inherit tests;
       meta-time = callPackage ./pkgs/development/libraries/time { };
