@@ -12,8 +12,8 @@
 
 buildDunePackage rec {
   pname = "rescript";
-  version = "v11.0.0-beta.1"; # TODO: update to v11.0.0 when released
   duneVersion = "2";
+  version = "v11.0.0-rc.2"; # TODO: update to v11.0.0 when released
 
   minimalOCamlVersion = "4.10";
 
@@ -21,7 +21,7 @@ buildDunePackage rec {
     owner = "rescript-lang";
     repo = "rescript-compiler";
     rev = version;
-    hash = "sha256-LuwQtG1J+iyA6JSb3n5G7S7J5/EXs6Xh6W9bRqC95sA=";
+    hash = "sha256-3yp7brVbfuTR6UwS+GeukT/Z00AIJBOUbu6G96+4k6M=";
     fetchSubmodules = true;
   };
 
