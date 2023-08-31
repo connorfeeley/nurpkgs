@@ -26,6 +26,7 @@ stdenv.mkDerivation {
     description = "MacOS system monitor in your menu bar - fork without telemetry";
     homepage = "https://github.com/jakwings/mac-stats";
     license = licenses.mit;
+    platforms = platforms.darwin;
     maintainers = with maintainers; [ cfeeley ];
   };
 }

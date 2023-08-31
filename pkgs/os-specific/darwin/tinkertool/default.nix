@@ -25,6 +25,7 @@ stdenv.mkDerivation {
     description = "Configure extra macOS options";
     homepage = "http://www.bresink.com/osx/TinkerTool.html";
     license = licenses.unfree;
+    platforms = platforms.darwin;
     maintainers = with maintainers; [ cfeeley ];
   };
 }
