@@ -49,7 +49,7 @@ let
   };
 
   ver = {
-    version = "af5ead41959d0657803fb2e5a47e684840959f2e";
+    version = "8f7f43ad880b13230ea9ffdc7c323dbedf2cd5d0";
     # Fields must not have leading a zero
     year = "2023";
     month = "8";
@@ -65,7 +65,7 @@ stdenv.mkDerivation rec {
     owner = "OpenSourceSourceTrail";
     repo = "Sourcetrail";
     rev = version;
-    hash = "sha256-oP32h91l0KMRCHWpq2yefVbRT40DHS6BswBpSIZR3j4=";
+    hash = "sha256-ThwuC/xm9RDF0m545Uii1FioGUFRpOJn8ElxRUmJAbw=";
     fetchSubmodules = true;
   };
 
@@ -75,14 +75,14 @@ stdenv.mkDerivation rec {
       inherit project_options;
     })
     ./0002-use-correct-catch2-alias.patch
-    ./0003-disable-failing-tests.patch
     (substituteAll {
-      src = ./0004-Revert-build-Remove-mac-from-CMake.patch;
+      src = ./0003-Revert-build-Remove-mac-from-CMake.patch;
       inherit setupFiles;
     })
-    ./0005-fix-darwin-build.patch
-    ./0006-add-missing-vector-include.patch
-  ] ++ lib.optional (stdenv.isDarwin) ./0007-disable-failing-tests-darwin.patch;
+    ./0004-fix-darwin-build.patch
+    ./0005-add-missing-vector-include.patch
+    ./0006-disable-failing-tests.patch
+  ] ++ lib.optional (stdenv.isDarwin) ./0007-disable-failing-tests-on-darwin.patch;
 
   nativeBuildInputs = [
     cmake

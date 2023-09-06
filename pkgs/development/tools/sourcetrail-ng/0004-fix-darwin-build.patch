@@ -1,7 +1,7 @@
-From dc2e612aed9508ef313a9762c5e50ffbee434b71 Mon Sep 17 00:00:00 2001
+From 8830096ca4399ac8ff165c2c3a434f9058d2cb8c Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 19:22:45 -0400
-Subject: [PATCH 5/5] fix darwin build
+Subject: [PATCH 4/7] fix darwin build
 
 ---
  src/app/CMakeLists.txt                        | 15 ++++++++-------

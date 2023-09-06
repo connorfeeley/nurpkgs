@@ -1,7 +1,7 @@
-From 0e412c6fbeb24d12588785cca54ad593e7e5e7b8 Mon Sep 17 00:00:00 2001
+From c6f776e4fb7e03b971b960ed24576d29c5a1b5db Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 18:05:58 -0400
-Subject: [PATCH 1/5] disable conan and use pkgconfig for dependencies
+Subject: [PATCH 1/7] disable conan and use pkgconfig for dependencies
 
 ---
  CMakeLists.txt              | 15 ++++++++-------
@@ -59,10 +59,10 @@ index 4808224c..f248a8d9 100755
      $<$<PLATFORM_ID:Windows>:bcrypt>)
  
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index a07332b6..b8ab8e9c 100644
+index 984f4b6f..6bf2fa20 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
-@@ -53,7 +53,7 @@ target_link_libraries(
+@@ -54,7 +54,7 @@ target_link_libraries(
    PRIVATE
      Boost::filesystem
      Sourcetrail::lib_utility
