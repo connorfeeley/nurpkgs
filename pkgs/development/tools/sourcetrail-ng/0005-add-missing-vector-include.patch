@@ -1,7 +1,7 @@
 From 0a1bc5de33d5a338ce4a0a8a8fe28ea6d7077df6 Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 20:34:27 -0400
-Subject: [PATCH 5/7] add missing vector include
+Subject: [PATCH 5/8] add missing vector include
 
 ---
  src/lib/data/storage/IntermediateStorage.h | 1 +

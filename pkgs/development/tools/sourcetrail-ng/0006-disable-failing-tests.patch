@@ -1,12 +1,11 @@
-From 0b63661c726c6c1e1282803d4fbf1b4e2a54df88 Mon Sep 17 00:00:00 2001
+From 01d535cf44b3680d268010f6f4422656ce18ccb2 Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Wed, 6 Sep 2023 17:59:08 -0400
-Subject: [PATCH 6/7] disable failing tests
+Subject: [PATCH 6/8] disable failing tests
 
 ---
  src/core/tests/FileSystemTestSuite.cpp | 4 +++-
- src/lib/tests/FileHandlerTestSuite.cpp | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/core/tests/FileSystemTestSuite.cpp b/src/core/tests/FileSystemTestSuite.cpp
 index d50fce44..b0fb67d2 100755
@@ -29,19 +28,6 @@ index d50fce44..b0fb67d2 100755
 -#endif
 \ No newline at end of file
 +#endif
-diff --git a/src/lib/tests/FileHandlerTestSuite.cpp b/src/lib/tests/FileHandlerTestSuite.cpp
-index 347cf626..dee1b50b 100644
---- a/src/lib/tests/FileHandlerTestSuite.cpp
-+++ b/src/lib/tests/FileHandlerTestSuite.cpp
-@@ -66,7 +66,7 @@ TEST(FileHandler, goodCaseFromBuffer) {
- }
- 
- // NOLINTNEXTLINE
--TEST(FileHandler, PassZeroToFromBuffer) {
-+TEST(FileHandler, DISABLED_PassZeroToFromBuffer) {
-   constexpr auto FilePath = "/tmp/fromDataFile0";
-   std::error_code errorCode;
-   {
 -- 
 2.40.1
 

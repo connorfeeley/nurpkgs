@@ -82,6 +82,7 @@ stdenv.mkDerivation rec {
     ./0004-fix-darwin-build.patch
     ./0005-add-missing-vector-include.patch
     ./0006-disable-failing-tests.patch
+    ./0008-full-quality-format-generic_format.patch
   ] ++ lib.optional (stdenv.isDarwin) ./0007-disable-failing-tests-on-darwin.patch;
 
   nativeBuildInputs = [

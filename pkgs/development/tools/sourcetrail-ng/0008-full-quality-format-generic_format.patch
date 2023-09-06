@@ -1,0 +1,57 @@
+From 0bd4e731594f09d209a8f15cb8cd08c69273e8a7 Mon Sep 17 00:00:00 2001
+From: Connor Feeley <git@cfeeley.org>
+Date: Wed, 6 Sep 2023 19:11:19 -0400
+Subject: [PATCH 8/8] full quality format::generic_format
+
+Nixpkgs' darwin stdenv needs generic_format to be fully qualified in the
+::format namespace.
+
+(cherry picked from commit fe4dab3b09a9a87127d167d96a75cc7056f37e2e)
+---
+ src/test/ResourcePathsTestSuite.cpp | 4 ++--
+ src/test/UserPathsTestSuite.cpp     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/test/ResourcePathsTestSuite.cpp b/src/test/ResourcePathsTestSuite.cpp
+index e49ed32a..7be5afb0 100644
+--- a/src/test/ResourcePathsTestSuite.cpp
++++ b/src/test/ResourcePathsTestSuite.cpp
+@@ -15,7 +15,7 @@ struct ResourcePathsFix : public testing::Test {
+ };
+ 
+ TEST_F(ResourcePathsFix, goodCase) {
+-  const auto tempDir = fs::path{fs::temp_directory_path(), fs::path::path::generic_format};
++  const auto tempDir = fs::path{fs::temp_directory_path(), fs::path::path::format::generic_format};
+   ASSERT_EQ(tempDir / "data/color_schemes/", ResourcePaths::getColorSchemesDirectoryPath().str());
+   ASSERT_EQ(tempDir / "data/syntax_highlighting_rules/",
+             ResourcePaths::getSyntaxHighlightingRulesDirectoryPath().str());
+@@ -24,4 +24,4 @@ TEST_F(ResourcePathsFix, goodCase) {
+   ASSERT_EQ(tempDir / "data/gui/", ResourcePaths::getGuiDirectoryPath().str());
+   ASSERT_EQ(tempDir / "data/license/", ResourcePaths::getLicenseDirectoryPath().str());
+   ASSERT_EQ(tempDir / "data/cxx/include/", ResourcePaths::getCxxCompilerHeaderDirectoryPath().str());
+-}
+\ No newline at end of file
++}
+diff --git a/src/test/UserPathsTestSuite.cpp b/src/test/UserPathsTestSuite.cpp
+index 12a76f91..a04842cd 100644
+--- a/src/test/UserPathsTestSuite.cpp
++++ b/src/test/UserPathsTestSuite.cpp
+@@ -8,7 +8,7 @@
+ namespace fs = std::filesystem;
+ 
+ TEST(UserPaths, goodCase) {
+-  const auto tempDir = fs::path{fs::temp_directory_path(), fs::path::path::generic_format};
++  const auto tempDir = fs::path{fs::temp_directory_path(), fs::path::path::format::generic_format};
+   EXPECT_TRUE(UserPaths::getUserDataDirectoryPath().empty());
+   UserPaths::setUserDataDirectoryPath(FilePath{tempDir});
+   EXPECT_EQ(tempDir, UserPaths::getUserDataDirectoryPath().str());
+@@ -16,4 +16,4 @@ TEST(UserPaths, goodCase) {
+   EXPECT_EQ(tempDir / "ApplicationSettings.xml", UserPaths::getAppSettingsFilePath().str());
+   EXPECT_EQ(tempDir / "window_settings.ini", UserPaths::getWindowSettingsFilePath().str());
+   EXPECT_EQ(tempDir / "log/", UserPaths::getLogDirectoryPath().str());
+-}
+\ No newline at end of file
++}
+-- 
+2.40.1
+

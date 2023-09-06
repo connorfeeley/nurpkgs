@@ -1,7 +1,7 @@
-From 3d73f428f271d053fa24decd9c8a9ada5808dfe0 Mon Sep 17 00:00:00 2001
+From c83343e5c54c329ed079eafca3800306b3d5b8a4 Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 20:43:32 -0400
-Subject: [PATCH 7/7] disable failing tests on darwin
+Subject: [PATCH 7/8] disable failing tests on darwin
 
 ---
  src/test/SharedMemoryTestSuite.cpp | 2 ++

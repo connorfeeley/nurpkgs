@@ -1,7 +1,7 @@
 From 5a0a68ce37926a639589b65620caa8dbc6e0e9e6 Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Tue, 15 Aug 2023 19:45:33 -0400
-Subject: [PATCH 3/7] Revert "build: Remove mac from CMake"
+Subject: [PATCH 3/8] Revert "build: Remove mac from CMake"
 
 This reverts commit efa5d983b048360b07c0ca72fd4c0d4afd58bcdc.
 ---
