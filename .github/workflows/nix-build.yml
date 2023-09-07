@@ -31,12 +31,12 @@ jobs:
         run: |
           set -euo pipefail
           matrix="$(nix-instantiate --eval --json --expr 'builtins.attrNames (import ./ci.nix {}).cachePkgs' | jq -rcM '{attr: ., os: ["ubuntu-latest"]}')"
-          echo "::set-output name=matrix::$matrix"
+          echo "matrix_passthru=$matrix" >> $GITHUB_OUTPUT
       - id: set-matrix-passthru
         run: |
           set -euo pipefail
           matrix="$(nix-instantiate --eval --json .github/passthru.nix | jq -r | jq -rcM '{attr: ., os: ["ubuntu-latest"]}')"
-          echo "::set-output name=matrix_passthru::$matrix"
+          echo "matrix_passthru=$matrix" >> $GITHUB_OUTPUT
 
   builds:
     needs: matrix_generate
