@@ -1,7 +1,7 @@
-From 0bd4e731594f09d209a8f15cb8cd08c69273e8a7 Mon Sep 17 00:00:00 2001
+From 6bcedb0c3af5759e238523af690926d61bf3b0d5 Mon Sep 17 00:00:00 2001
 From: Connor Feeley <git@cfeeley.org>
 Date: Wed, 6 Sep 2023 19:11:19 -0400
-Subject: [PATCH 8/8] full quality format::generic_format
+Subject: [PATCH 8/8] fully quality format::generic_format
 
 Nixpkgs' darwin stdenv needs generic_format to be fully qualified in the
 ::format namespace.
