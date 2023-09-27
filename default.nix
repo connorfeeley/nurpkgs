@@ -50,6 +50,7 @@ let
       rescript = pkgs.ocaml-ng.ocamlPackages_4_14.callPackage ./pkgs/development/compilers/rescript { };
       inherit sourcetrail-ng;
       inherit tests;
+      makedumpfile = callPackage ./pkgs/development/tools/makedumpfile { };
       meta-time = callPackage ./pkgs/development/libraries/time { };
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
       xantfarm = callPackage ./pkgs/applications/misc/xantfarm { };
