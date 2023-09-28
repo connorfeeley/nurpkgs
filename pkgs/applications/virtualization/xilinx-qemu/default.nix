@@ -13,7 +13,7 @@
 , nettle
 , perl
 , pixman
-, pkgconfig
+, pkg-config
 , snappy
 , texinfo
 , vde2
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
     (buildPackages.python3.withPackages (p: [ p.libfdt ]))
     bison
     flex
-    pkgconfig
+    pkg-config
   ] ++ lib.optionals stdenv.isDarwin [ rez setfile patchelf ];
 
   buildInputs = [

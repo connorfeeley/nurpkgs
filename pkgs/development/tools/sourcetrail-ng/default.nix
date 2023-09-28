@@ -17,7 +17,7 @@
 , tinyxml
 , fmt
 , project_options
-, pkgconfig
+, pkg-config
 , substituteAll
   # Darwin-only
 , CoreFoundation
@@ -87,7 +87,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
     desktop-file-utils
     imagemagick
