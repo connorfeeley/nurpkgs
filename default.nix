@@ -35,6 +35,7 @@ let
     in
     {
       inherit cpprestsdk;
+      crash-utility = callPackage ./pkgs/development/tools/crash-utility { };
       darwinPackages = callPackage ./darwin-packages.nix { };
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
       github-copilot-cli = callPackage ./pkgs/applications/misc/github-copilot-cli/default.nix { };
