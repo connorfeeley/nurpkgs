@@ -65,5 +65,7 @@ stdenv.mkDerivation rec {
     platforms = platforms.linux;
     license = licenses.gpl2;
     maintainers = with maintainers; [ cfeeley ];
+
+    broken = true;
   };
 }
