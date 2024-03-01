@@ -35,6 +35,7 @@ let
     in
     {
       inherit cpprestsdk;
+      clknetsim = callPackage ./pkgs/development/tools/clknetsim { };
       crash-utility = callPackage ./pkgs/development/tools/crash-utility { };
       darwinPackages = callPackage ./darwin-packages.nix { };
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
@@ -47,7 +48,6 @@ let
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       inherit project_options;
       pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
-      rclone-tui = callPackage ./pkgs/applications/misc/rclone-tui { };
       rescript = pkgs.ocaml-ng.ocamlPackages_4_14.callPackage ./pkgs/development/compilers/rescript { };
       inherit sourcetrail-ng;
       inherit tests;

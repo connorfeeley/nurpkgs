@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, kernel, kmod, pciutils, pahole }:
+{ lib, stdenv, fetchurl, dpkg, file, glibc, gcc, kernel, kmod, pciutils, pahole, installShellFiles }:
 
 stdenv.mkDerivation rec {
   name = "mft-${version}";
@@ -63,7 +63,11 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out
     cp -r $TMPDIR/{etc,usr/{bin,lib64,share}} $out
-    substituteInPlace $(find $out/etc/bash_completion.d -type f) --replace "/etc/bash_completion.d" "$out/etc/bash_completion.d"
+
+    mkdir -p $out/share/completions
+    substituteInPlace $(find $out/etc/bash_completion.d -type f) --replace "/etc/bash_completion.d" "$out/share/completions"
+    mv $(find $out/etc/bash_completion.d -type f) $out/share/completions
+
     substituteInPlace $out/etc/init.d/mst --replace "mbindir=/usr/bin" "mbindir=$out/bin"
     substituteInPlace $out/etc/init.d/mst --replace "mlibdir=/usr/lib64" "mlibdir=$out/lib64"
     unlink $out/bin/mst
@@ -92,6 +96,10 @@ stdenv.mkDerivation rec {
         echo "Skipping $LIB"
       fi
     done
+  '';
+
+  postInstall = ''
+    installShellCompletion share/completions/foobar.{bash,fish,zsh}
   '';
 
   # check all ELF files to have their dependencies
