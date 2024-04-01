@@ -14,7 +14,7 @@ buildGoModule rec {
     sha256 = "sha256-vUz4yS1YJlRqUK6y97afCxeL4qAQBFcJlmBPWuGRhWo=";
   };
 
-  vendorSha256 = "sha256-PiBrsYbHOzeRzcP0z1kW5lQvDoSiw3WSYy3FZDSu0SQ=";
+  vendorHash = "sha256-PiBrsYbHOzeRzcP0z1kW5lQvDoSiw3WSYy3FZDSu0SQ=";
 
   meta = with lib; {
     description = "An improved patching system for Kobo eReaders.";

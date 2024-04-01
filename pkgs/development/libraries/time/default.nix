@@ -16,7 +16,7 @@ buildGoModule rec {
     hash = "sha256-sM76MJE6a7jiwhUWMdXULNkoe7WtGPH7QLpuEreKBfY=";
   };
 
-  vendorSha256 = "sha256-HilPAPGLWEA9dY72Hqa7WnFBWrAXoigBwbw4RLWN1L8=";
+  vendorHash = "sha256-HilPAPGLWEA9dY72Hqa7WnFBWrAXoigBwbw4RLWN1L8=";
 
   buildInputs = [ libpcap tzdata ];
 
