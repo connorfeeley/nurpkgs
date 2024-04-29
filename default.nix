@@ -32,6 +32,7 @@ let
           inherit llvmPackages project_options;
           inherit (pkgs.darwin.apple_sdk_11_0.frameworks) CoreFoundation;
         };
+      pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
     in
     {
       inherit cpprestsdk;
@@ -48,7 +49,7 @@ let
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
       pg-osc = callPackage ./pkgs/applications/database/ps-osc { };
       inherit project_options;
-      pythonPackages = pkgs.lib.recurseIntoAttrs (pkgs.python3.pkgs.callPackage ./python-packages.nix { });
+      inherit (pythonPackages) pdftocgen;
       rescript = pkgs.ocaml-ng.ocamlPackages_4_14.callPackage ./pkgs/development/compilers/rescript { };
       inherit sourcetrail-ng;
       inherit tests;
