@@ -14,4 +14,5 @@ lib.makeScope newScope (self: let inherit (self) callPackage; in {
   pinecone-client = callPackage ./pkgs/development/python-modules/pinecone-client { };
   sourcery = callPackage ./pkgs/development/python-modules/sourcery { };
   tiktoken = callPackage ./pkgs/development/python-modules/tiktoken { };
+  pdftocgen = callPackage ./pkgs/development/python-modules/pdftocgen { };
 })
