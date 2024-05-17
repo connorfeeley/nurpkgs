@@ -113,14 +113,13 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DBoost_USE_STATIC_LIBS=OFF"
     "-DBUILD_CXX_LANGUAGE_PACKAGE=ON"
+    "-DClang_DIR=${llvmPackages.clang-unwrapped}"
   ] ++ lib.optionals doCheck [
     "-DENABLE_UNIT_TEST=ON"
     "-DENABLE_E2E_TEST=ON"
     "-DENABLE_INTEGRATION_TEST=OFF" # Broken by sandbox
   ] ++ lib.optional stdenv.isLinux
-    "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}"
-  ++ lib.optional stdenv.isDarwin
-    "-DClang_DIR=${llvmPackages.clang-unwrapped}";
+    "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}";
 
   postPatch =
     let
