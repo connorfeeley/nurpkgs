@@ -25,6 +25,8 @@
 , gtest
 , catch2_3
 , trompeloeil
+, conan
+, ninja
 }:
 
 let
@@ -49,7 +51,7 @@ let
   };
 
   ver = {
-    version = "8f7f43ad880b13230ea9ffdc7c323dbedf2cd5d0";
+    version = "3cfbfa62a6341617cb5d7fc008a8c85ff6c42051";
     # Fields must not have leading a zero
     year = "2023";
     month = "8";
@@ -65,7 +67,7 @@ stdenv.mkDerivation rec {
     owner = "OpenSourceSourceTrail";
     repo = "Sourcetrail";
     rev = version;
-    hash = "sha256-ThwuC/xm9RDF0m545Uii1FioGUFRpOJn8ElxRUmJAbw=";
+    hash = "sha256-WCtCkQsXrN42KLRo/zGmWKnqmO86NObqMA/lmN6ZOzY=";
     fetchSubmodules = true;
   };
 
@@ -94,6 +96,8 @@ stdenv.mkDerivation rec {
     sqlite
     tinyxml
     fmt.dev
+    conan
+    ninja
   ] ++ lib.optionals doCheck [
     gtest.dev
     catch2_3
