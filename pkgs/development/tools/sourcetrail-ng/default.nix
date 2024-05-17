@@ -25,6 +25,7 @@
 , gtest
 , catch2_3
 , trompeloeil
+, ninja
 }:
 
 let
@@ -55,6 +56,18 @@ let
     month = "8";
     day = "14";
   };
+
+  clang-unwrapped = setClangFlags llvmPackages.clang-unwrapped;
+
+  setClangFlags = package: package.overrideAttrs (oldAttrs: {
+    cmakeFlags = oldAttrs.cmakeFlags ++ [
+      "-DLLVM_ENABLE_PROJECTS:STRING=clang"
+      "-DLLVM_ENABLE_RTTI:BOOL=ON"
+      "-DCLANG_LINK_CLANG_DYLIB:BOOL=ON"
+      "-DLLVM_LINK_LLVM_DYLIB:BOOL=ON"
+      "-DLLVM_TARGETS_TO_BUILD=host"
+    ];
+  });
 
 in
 stdenv.mkDerivation rec {
@@ -87,6 +100,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
+    ninja
     pkg-config
     wrapQtAppsHook
     desktop-file-utils
@@ -102,20 +116,26 @@ stdenv.mkDerivation rec {
   ++ lib.optional (stdenv.isDarwin) qt5.qtmacextras
   ++ lib.optionals doCheck testBinPath;
   buildInputs = [ boost shared-mime-info ]
-    ++ (with qt5; [ qtbase qtsvg ]) ++ (with llvmPackages; [ libclang llvm ]);
-  binPath = [ gcc which ];
+    ++ (with qt5; [ qtbase qtsvg ]) ++ ([
+    # llvmPackages.libclang
+    llvmPackages.llvm
+    (llvmPackages.clang)
+  ]);
+  # Added to sourcetrail wrapper's PATH
+  binPath = [ llvmPackages.clang gcc which ];
   testBinPath = binPath ++ [ coreutils ];
 
   cmakeFlags = [
     "-DBoost_USE_STATIC_LIBS=OFF"
+
+    "-DClang_DIR=${clang-unwrapped.dev}/lib/cmake/clang"
     "-DBUILD_CXX_LANGUAGE_PACKAGE=ON"
-    "-DClang_DIR=${llvmPackages.clang-unwrapped}"
+    "-DCMAKE_PREFIX_PATH=${clang-unwrapped.dev}/lib/cmake/clang"
   ] ++ lib.optionals doCheck [
     "-DENABLE_UNIT_TEST=ON"
     "-DENABLE_E2E_TEST=ON"
     "-DENABLE_INTEGRATION_TEST=OFF" # Broken by sandbox
-  ] ++ lib.optional stdenv.isLinux
-    "-DCMAKE_PREFIX_PATH=${llvmPackages.clang-unwrapped}";
+  ];
 
   postPatch =
     let
