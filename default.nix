@@ -10,9 +10,8 @@
 # commands such as:
 #     nix-build -A mypackage
 
-{ system ? builtins.currentSystem
+{ pkgs ? import <nixpkgs> { inherit overlays; }
 , overlays ? [ (import ./overlays).maintainer ]
-, pkgs ? import <nixpkgs> { inherit system overlays; }
 , ...
 }:
 let
