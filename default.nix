@@ -39,7 +39,8 @@ let
       crash-utility = callPackage ./pkgs/development/tools/crash-utility { };
       darwinPackages = callPackage ./darwin-packages.nix { };
       fetchdmg = callPackage ./pkgs/build-support/fetchdmg { } // { tests = tests.fetchdmg; };
-      github-copilot-cli = callPackage ./pkgs/applications/misc/github-copilot-cli/default.nix { };
+      github-copilot-cli = callPackage ./pkgs/applications/misc/github-copilot-cli { };
+      input-leap = pkgs.libsForQt5.callPackage ./pkgs/applications/misc/input-leap { inherit (pkgs.darwin.apple_sdk.frameworks) ScreenSaver IOKit ApplicationServices Foundation Carbon; };
       kobopatch = callPackage ./pkgs/applications/misc/kobopatch { };
       # linux-xlnx = pkgs.recurseIntoAttrs (callPackage ./linux-kernels.nix { });
       llama-cpp = callPackage ./pkgs/development/libraries/llama-cpp { inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate; };
