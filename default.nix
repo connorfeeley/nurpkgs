@@ -46,7 +46,7 @@ let
       mdio-tools = callPackage ./pkgs/os-specific/linux/mdio-tools { };
       mft = callPackage ./pkgs/applications/misc/mft { kernel = pkgs.linux; };
       nmos-cpp = callPackage ./pkgs/development/libraries/nmos-cpp { inherit cpprestsdk; };
-      pg-osc = callPackage ./pkgs/applications/database/ps-osc { };
+      pg-osc = callPackage ./pkgs/applications/database/pg-osc { };
       inherit project_options;
       inherit (pythonPackages) pdftocgen;
       rescript = pkgs.ocaml-ng.ocamlPackages_4_14.callPackage ./pkgs/development/compilers/rescript { };

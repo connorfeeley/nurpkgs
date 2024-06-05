@@ -9,4 +9,6 @@ in bundlerApp {
   pname = "pg_online_schema_change";
   inherit gemdir;
   exes = [ "pg-online-schema-change" ];
+
+  meta.broken = true;
 }
