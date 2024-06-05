@@ -1,6 +1,8 @@
 * Connor Feeley's NUR packages
 Based on upstream [[https://github.com/nix-community/nur-packages-template][nur-packages-template]].
 
+Feel free to upstream anything in this repo into nixpkgs.
+
 [[https://github.com/connorfeeley/nurpkgs/workflows/Build%20and%20populate%20cache/badge.svg]]
 
 [[https://%3Ccfeeley%3E.cachix.org][https://img.shields.io/badge/cachix-%3Ccfeeley%3E-blue.svg]]
