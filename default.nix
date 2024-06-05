@@ -55,6 +55,7 @@ let
       makedumpfile = callPackage ./pkgs/development/tools/makedumpfile { };
       meta-time = callPackage ./pkgs/development/libraries/time { };
       toronto-backgrounds = callPackage ./pkgs/data/misc/toronto-backgrounds { };
+      tatutanatata = callPackage ./pkgs/applications/email/tatutanatata { };
       xantfarm = callPackage ./pkgs/applications/misc/xantfarm { };
       xilinx-qemu = pkgs.callPackage ./pkgs/applications/virtualization/xilinx-qemu { inherit (pkgs.darwin.apple_sdk.frameworks) CoreAudio Cocoa; inherit (pkgs.darwin.stubs) rez setfile; };
       xsct = callPackage ./pkgs/applications/misc/xsct { };
