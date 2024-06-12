@@ -46,11 +46,8 @@ stdenv.mkDerivation rec {
     cp clknetsim.so $out/lib/
   '';
 
-  # meta = with lib; {
-  #   description = "Linux kernel crash utility";
-  #   homepage = "https://crash-utility.github.io/";
-  #   platforms = platforms.linux;
-  #   license = licenses.gpl2;
-  #   maintainers = with maintainers; [ cfeeley ];
-  # };
+  meta = with lib; {
+    platforms = platforms.linux;
+    maintainers = with maintainers; [ cfeeley ];
+  };
 }
