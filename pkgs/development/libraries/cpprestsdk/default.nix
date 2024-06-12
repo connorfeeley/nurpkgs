@@ -40,6 +40,11 @@ stdenv.mkDerivation rec {
     })
   ]);
 
+  env = {
+    NIX_CFLAGS_COMPILE = lib.optionalString stdenv.isDarwin "-Wno-unused-but-set-parameter";
+    NIX_CXXFLAGS_COMPILE = lib.optionalString stdenv.isDarwin "-Wno-unused-but-set-parameter";
+  };
+
   buildInputs = [ boost ] ++ (lib.optionals stdenv.isDarwin [ Security ]);
   propagatedBuildInputs = [ zlib websocketpp openssl ];
   nativeBuildInputs = [ cmake ninja ];
