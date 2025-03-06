@@ -264,6 +264,10 @@ stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
+  postInstall = ''
+    ln -s $out/bin/sourcetrail $out/bin/sourcetrail-ng
+  '';
+
   # This has to be done manually in the installPhase because the actual binary
   # lives in $out/opt/sourcetrail/bin, which isn't covered by wrapQtAppsHook
   dontWrapQtApps = true;
